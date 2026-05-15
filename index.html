@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NH Ops Dashboard — Release 1</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+/* ── ROOT: matches Design Andon Board exactly ── */
+:root {
+  --bg:       #080a0d;
+  --surface:  #0f1217;
+  --surface2: #161b22;
+  --border:   rgba(255,255,255,0.06);
+  --border2:  rgba(255,255,255,0.11);
+  --text:     #eef0f4;
+  --muted:    rgba(238,240,244,0.42);
+  --dim:      rgba(238,240,244,0.18);
+  --accent:   #F7941D;
+  --accent-bg:rgba(247,148,29,0.10);
+  --green:    #69F0AE;
+  --yellow:   #FFD54F;
+  --red:      #EF5350;
+  --green-bg: rgba(105,240,174,0.10);
+  --yellow-bg:rgba(255,213,79,0.10);
+  --red-bg:   rgba(239,83,80,0.10);
+}
+body.light-mode {
+  --bg:       #f5f5f5;
+  --surface:  #ffffff;
+  --surface2: #ebebeb;
+  --border:   rgba(0,0,0,0.08);
+  --border2:  rgba(0,0,0,0.15);
+  --text:     #0a0a0a;
+  --muted:    rgba(10,10,10,0.52);
+  --dim:      rgba(10,10,10,0.28);
+  --accent:   #F7941D;
+  --accent-bg:rgba(247,148,29,0.10);
+  --green:    #2E7D32;
+  --yellow:   #F57F17;
+  --red:      #C62828;
+  --green-bg: rgba(46,125,50,0.10);
+  --yellow-bg:rgba(245,127,23,0.10);
+  --red-bg:   rgba(198,40,40,0.10);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);overflow:hidden;}
+
+/* ── HEADER ── */
+#header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;background:var(--surface);
+  border-bottom:2px solid var(--accent);height:52px;
+}
+.hdr-left{display:flex;align-items:center;gap:12px;}
+.board-logo{
+  width:28px;height:28px;background:var(--accent);
+  clip-path:polygon(50% 0%,100% 25%,100% 75%,50% 100%,0% 75%,0% 25%);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;font-size:10px;color:#fff;letter-spacing:.05em;
+}
+.board-title{
+  font-family:'Bebas Neue',sans-serif;font-size:1.35rem;
+  letter-spacing:.12em;color:var(--text);
+}
+.board-title span{color:var(--accent);}
+.ww-pill{
+  font-family:'DM Mono',monospace;font-size:.68rem;font-weight:500;
+  color:var(--accent);background:var(--accent-bg);
+  border:1px solid rgba(247,148,29,0.35);
+  padding:2px 9px;border-radius:4px;letter-spacing:.08em;
+}
+.hdr-center{display:flex;gap:3px;}
+.nav-btn{
+  font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:500;
+  padding:4px 13px;border:1px solid var(--border2);
+  background:transparent;color:var(--muted);cursor:pointer;
+  border-radius:4px;transition:all .15s;letter-spacing:.03em;
+}
+.nav-btn:hover{border-color:var(--accent);color:var(--accent);}
+.nav-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.hdr-right{display:flex;align-items:center;gap:6px;}
+.team-btns{display:flex;gap:3px;}
+.slicer-btn{
+  font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:500;
+  padding:4px 10px;border-radius:4px;border:1px solid var(--border2);
+  background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;
+}
+.slicer-btn:hover{color:var(--text);border-color:var(--text);}
+.slicer-btn.active{background:var(--accent);color:#fff;border-color:var(--accent);}
+.btn-icon{
+  width:28px;height:28px;border-radius:50%;
+  border:1px solid var(--border2);background:transparent;
+  cursor:pointer;color:var(--muted);font-size:13px;
+  display:flex;align-items:center;justify-content:center;transition:all .15s;
+}
+.btn-icon:hover{border-color:var(--accent);color:var(--accent);}
+.auto-btn{
+  font-family:'DM Sans',sans-serif;font-size:.7rem;font-weight:500;
+  padding:4px 10px;border-radius:4px;border:1px solid var(--border2);
+  background:transparent;color:var(--muted);cursor:pointer;transition:all .15s;
+}
+.auto-btn:hover{border-color:var(--accent);color:var(--accent);}
+.auto-btn.on{background:var(--accent-bg);border-color:var(--accent);color:var(--accent);}
+
+/* ── MAIN ── */
+#main{height:calc(100vh - 52px);overflow:hidden;}
+.screen{display:none;height:100%;padding:1.2rem 1.6rem;overflow-y:auto;flex-direction:column;}
+.screen.active{display:flex;animation:fadeIn .3s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── SECTION HEADER ── */
+.sec-hdr{display:flex;align-items:baseline;gap:10px;margin-bottom:1rem;flex-shrink:0;}
+.sec-title{
+  font-family:'Bebas Neue',sans-serif;font-size:1.15rem;
+  letter-spacing:.15em;color:var(--text);
+}
+.sec-sub{font-size:.68rem;color:var(--dim);letter-spacing:.03em;}
+.sec-rule{flex:1;height:1px;background:linear-gradient(90deg,var(--accent),transparent);margin-left:6px;}
+
+/* ── SCORECARD — matches Design Andon Board Screen 2 ── */
+.sc-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
+  gap:1rem;flex:1;align-content:start;
+}
+/* Card shell */
+.emp-card{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:14px;overflow:hidden;
+  transition:border-color .2s;
+}
+.emp-card:hover{border-color:var(--border2);}
+
+/* Card top — name left, score badge right */
+.card-top{
+  padding:1.1rem 1.4rem .9rem;
+  display:flex;align-items:flex-start;justify-content:space-between;
+  border-bottom:1px solid var(--border);
+}
+.card-left{}
+.d-name{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2rem;letter-spacing:.06em;line-height:1;
+}
+.d-fullname{font-size:.68rem;color:var(--muted);margin-top:3px;}
+.d-meta{font-size:.6rem;color:var(--dim);margin-top:2px;}
+.card-right{display:flex;flex-direction:column;align-items:flex-end;gap:.25rem;}
+.score-badge{display:flex;align-items:baseline;gap:2px;}
+.score-num{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:3.2rem;line-height:1;letter-spacing:.02em;
+}
+.score-num.c-high{color:var(--green);}
+.score-num.c-mid{color:var(--yellow);}
+.score-num.c-low{color:var(--red);}
+.score-num.c-blank{color:var(--dim);}
+.score-unit{font-size:.62rem;color:var(--dim);font-family:'DM Mono',monospace;}
+.rank-tag{
+  font-family:'DM Mono',monospace;font-size:.62rem;font-weight:500;
+  padding:2px 8px;border-radius:20px;
+}
+.rank-tag.gold{background:rgba(255,215,0,.12);color:#FFD700;border:1px solid rgba(255,215,0,.3);}
+.rank-tag.silver{background:rgba(192,192,192,.12);color:#C0C0C0;border:1px solid rgba(192,192,192,.3);}
+.rank-tag.bronze{background:rgba(205,127,50,.12);color:#CD7F32;border:1px solid rgba(205,127,50,.3);}
+.rank-tag.norm{background:var(--accent-bg);color:var(--accent);border:1px solid rgba(247,148,29,.3);}
+.rank-tag.none{background:var(--border);color:var(--dim);border:1px solid var(--border2);}
+
+/* Score bar strip — mimics qual-bar-wrap */
+.score-bar-strip{
+  padding:.5rem 1.4rem .55rem;
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:.75rem;
+}
+.sbar-label{
+  font-size:.58rem;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--muted);width:44px;flex-shrink:0;
+}
+.sbar-bg{flex:1;height:7px;background:rgba(255,255,255,.07);border-radius:3px;overflow:hidden;}
+body.light-mode .sbar-bg{background:rgba(0,0,0,.08);}
+.sbar-fill{height:100%;border-radius:3px;transition:width .7s ease;}
+.sbar-fill.c-high{background:var(--green);}
+.sbar-fill.c-mid{background:var(--yellow);}
+.sbar-fill.c-low{background:var(--red);}
+.sbar-val{
+  font-family:'DM Mono',monospace;font-size:.68rem;
+  width:40px;text-align:right;flex-shrink:0;
+}
+.sbar-val.c-high{color:var(--green);}
+.sbar-val.c-mid{color:var(--yellow);}
+.sbar-val.c-low{color:var(--red);}
+.sbar-val.c-blank{color:var(--dim);}
+
+/* Category cells — 5-column grid, mimics card-levels */
+.cat-cells{
+  display:grid;grid-template-columns:repeat(5,1fr);
+  gap:1px;background:var(--border);
+}
+.cat-cell{
+  padding:.75rem .7rem .65rem;
+  display:flex;flex-direction:column;gap:.25rem;
+}
+/* Per-category tinted backgrounds + label colors */
+.cat-cell.cc-prod{ background:rgba(79,195,247,.08); }
+.cat-cell.cc-prod .cc-name{ color:#4FC3F7; }
+.cat-cell.cc-sla{  background:rgba(105,240,174,.08); }
+.cat-cell.cc-sla  .cc-name{ color:#69F0AE; }
+.cat-cell.cc-qual{ background:rgba(206,147,216,.08); }
+.cat-cell.cc-qual .cc-name{ color:#CE93D8; }
+.cat-cell.cc-att{  background:rgba(255,213,79,.08); }
+.cat-cell.cc-att  .cc-name{ color:#FFD54F; }
+.cat-cell.cc-sup{  background:rgba(255,183,77,.08); }
+.cat-cell.cc-sup  .cc-name{ color:#FFB74D; }
+/* Light mode tints */
+body.light-mode .cat-cell.cc-prod{ background:rgba(2,119,189,.07); }
+body.light-mode .cat-cell.cc-prod .cc-name{ color:#0277BD; }
+body.light-mode .cat-cell.cc-sla{  background:rgba(46,125,50,.07); }
+body.light-mode .cat-cell.cc-sla  .cc-name{ color:#2E7D32; }
+body.light-mode .cat-cell.cc-qual{ background:rgba(106,27,154,.07); }
+body.light-mode .cat-cell.cc-qual .cc-name{ color:#6A1B9A; }
+body.light-mode .cat-cell.cc-att{  background:rgba(245,127,23,.07); }
+body.light-mode .cat-cell.cc-att  .cc-name{ color:#E65100; }
+body.light-mode .cat-cell.cc-sup{  background:rgba(230,81,0,.07); }
+body.light-mode .cat-cell.cc-sup  .cc-name{ color:#BF360C; }
+
+.cc-name{font-size:.52rem;letter-spacing:.07em;text-transform:uppercase;}
+.cc-val{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.6rem;line-height:1;
+}
+.cc-wt{font-size:.55rem;color:var(--dim);font-family:'DM Mono',monospace;}
+
+/* WW dot tracker at the bottom */
+.ww-strip{
+  padding:.55rem 1.4rem;border-top:1px solid var(--border);
+  display:flex;align-items:center;gap:3px;
+}
+.ww-strip-label{font-size:.58rem;color:var(--dim);margin-right:4px;font-family:'DM Mono',monospace;}
+.wdot{
+  width:18px;height:18px;border-radius:2px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:7px;font-family:'DM Mono',monospace;font-weight:500;
+}
+.wdot.cur{background:var(--accent);color:#fff;}
+.wdot.has{background:var(--accent-bg);color:var(--accent);}
+.wdot.no{background:var(--border);color:var(--dim);}
+
+/* ── BREAKDOWN SPLIT SCREEN (Screen 2) ── */
+.bkd-split{
+  display:grid;grid-template-columns:70% 30%;
+  gap:12px;flex:1;min-height:0;
+}
+
+/* LEFT — trend line chart */
+.bkd-trend-panel{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;overflow:hidden;display:flex;flex-direction:column;
+}
+.bkd-trend-hdr{
+  padding:.65rem 1rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--surface2);flex-shrink:0;
+}
+.bkd-trend-title{
+  font-family:'Bebas Neue',sans-serif;font-size:.9rem;
+  letter-spacing:.12em;color:var(--text);
+}
+.bkd-trend-legend{display:flex;gap:8px;flex-wrap:wrap;}
+.bkd-trend-leg-item{display:flex;align-items:center;gap:6px;font-size:.73rem;color:var(--text);}
+.bkd-trend-leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.bkd-trend-chart{flex:1;position:relative;padding:.8rem;min-height:0;}
+
+/* RIGHT — big chart: one row per employee, all 5 bars side by side */
+.bkd-chart-panel{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;overflow:hidden;display:flex;flex-direction:column;
+}
+.bkd-chart-hdr{
+  padding:.65rem 1rem;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  background:var(--surface2);flex-shrink:0;
+}
+.bkd-chart-title{
+  font-family:'Bebas Neue',sans-serif;font-size:.9rem;
+  letter-spacing:.12em;color:var(--text);
+}
+.bkd-legend{display:flex;gap:10px;flex-wrap:wrap;}
+.bkd-leg-item{display:flex;align-items:center;gap:4px;font-size:.58rem;color:var(--muted);}
+.bkd-leg-dot{width:8px;height:8px;border-radius:2px;flex-shrink:0;}
+.bkd-chart-body{flex:1;overflow-y:auto;padding:.5rem .8rem;}
+.bkd-chart-row{
+  display:flex;align-items:center;gap:.6rem;
+  padding:.35rem 0;border-bottom:1px solid var(--border);
+}
+.bkd-chart-row:last-child{border-bottom:none;}
+.bkd-chart-name{
+  font-family:'Bebas Neue',sans-serif;font-size:1rem;
+  letter-spacing:.04em;width:120px;flex-shrink:0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.bkd-chart-bars{flex:1;display:flex;flex-direction:column;gap:3px;}
+.bkd-chart-bar-row{display:flex;align-items:center;gap:.4rem;}
+.bkd-chart-bar-lbl{
+  font-size:.48rem;letter-spacing:.06em;text-transform:uppercase;
+  width:26px;flex-shrink:0;text-align:right;
+}
+.bkd-chart-bar-bg{
+  flex:1;height:7px;background:var(--border2);
+  border-radius:3px;overflow:hidden;
+}
+body.light-mode .bkd-chart-bar-bg{background:rgba(0,0,0,.07);}
+.bkd-chart-bar-fill{height:100%;border-radius:3px;transition:width .7s ease;}
+.bkd-chart-bar-val{
+  font-family:'DM Mono',monospace;font-size:.55rem;
+  width:30px;flex-shrink:0;text-align:right;
+}
+.bkd-chart-score{
+  font-family:'Bebas Neue',sans-serif;font-size:1.3rem;
+  width:42px;flex-shrink:0;text-align:right;
+}
+.bkd-chart-score.c-high{color:var(--green);}
+.bkd-chart-score.c-mid{color:var(--yellow);}
+.bkd-chart-score.c-low{color:var(--red);}
+.bkd-chart-score.c-blank{color:var(--dim);}
+
+/* ── PERSON TAGS (NEW HIRE / NCG) — matches Design Andon Board ── */
+.tag{
+  font-family:'DM Sans',sans-serif;
+  font-size:.52rem;font-weight:600;
+  letter-spacing:.1em;text-transform:uppercase;
+  border-radius:4px;padding:2px 7px;
+  white-space:nowrap;flex-shrink:0;align-self:flex-start;
+}
+.tag-newhire{
+  color:#fbbf24;
+  background:rgba(251,191,36,.12);
+  border:1px solid rgba(251,191,36,.35);
+}
+.tag-ncg{
+  color:#60c8f5;
+  background:rgba(96,200,245,.12);
+  border:1px solid rgba(96,200,245,.35);
+}
+
+/* ── AUTOPLAY BAR ── */
+#ap-bar{position:fixed;bottom:0;left:0;right:0;height:2px;background:var(--border);z-index:200;display:none;overflow:hidden;}
+#ap-prog{height:100%;background:var(--accent);width:0%;}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar{width:3px;height:3px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px;}
+
+/* ── SETTINGS OVERLAY ── */
+#settings-overlay{
+  display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);
+  z-index:500;align-items:center;justify-content:center;
+}
+#settings-overlay.open{display:flex;}
+.settings-panel{
+  background:var(--surface);border:1px solid var(--border2);
+  border-radius:12px;padding:1.6rem 1.8rem;
+  width:min(520px,94vw);max-height:88vh;overflow-y:auto;
+}
+.settings-panel-hdr{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:1.2rem;padding-bottom:.8rem;border-bottom:1px solid var(--border);
+}
+.settings-title{
+  font-family:'Bebas Neue',sans-serif;font-size:1.3rem;
+  letter-spacing:.1em;color:var(--text);
+}
+.settings-title span{color:var(--accent);}
+.settings-close{
+  background:none;border:none;color:var(--muted);
+  font-size:1.2rem;cursor:pointer;padding:0 4px;line-height:1;
+}
+.settings-close:hover{color:var(--text);}
+.settings-section{margin-bottom:1.2rem;}
+.settings-section-title{
+  font-size:.62rem;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dim);margin-bottom:.6rem;
+  font-family:'DM Mono',monospace;
+}
+.settings-row{
+  display:flex;align-items:center;gap:.6rem;
+  padding:.4rem 0;border-bottom:1px solid var(--border);
+}
+.settings-row:last-child{border-bottom:none;}
+.settings-row-label{
+  flex:1;font-size:.75rem;color:var(--text);
+}
+.settings-row-sub{font-size:.6rem;color:var(--dim);}
+.settings-input{
+  background:var(--bg);border:1px solid var(--border2);
+  color:var(--text);font-family:'DM Mono',monospace;
+  font-size:.78rem;padding:.3rem .6rem;border-radius:4px;
+  width:72px;text-align:center;outline:none;
+}
+.settings-input:focus{border-color:var(--accent);}
+.settings-tags-input{
+  background:var(--bg);border:1px solid var(--border2);
+  color:var(--text);font-family:'DM Mono',monospace;
+  font-size:.72rem;padding:.35rem .6rem;border-radius:4px;
+  width:100%;outline:none;resize:none;height:56px;
+}
+.settings-tags-input:focus{border-color:var(--accent);}
+.settings-save{
+  font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:600;
+  background:var(--accent);color:#fff;border:none;
+  padding:.5rem 1.2rem;border-radius:4px;cursor:pointer;
+  width:100%;margin-top:.8rem;letter-spacing:.03em;
+}
+.settings-save:hover{opacity:.9;}
+.target-marker{
+  position:absolute;top:0;bottom:0;width:2px;
+  background:rgba(255,255,255,.4);
+}
+body.light-mode .target-marker{background:rgba(0,0,0,.3);}
+
+/* ── LIGHT MODE HEADER OVERRIDE ── */
+body.light-mode #header{background:#0a0a0a;border-bottom-color:var(--accent);}
+body.light-mode .board-title{color:#fff;}
+body.light-mode .nav-btn{color:rgba(255,255,255,.5);border-color:rgba(255,255,255,.15);}
+body.light-mode .nav-btn:hover{color:var(--accent);border-color:var(--accent);}
+body.light-mode .nav-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+body.light-mode .slicer-btn{color:rgba(255,255,255,.5);border-color:rgba(255,255,255,.15);}
+body.light-mode .slicer-btn:hover{color:#fff;border-color:#fff;}
+body.light-mode .slicer-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+/* Slicer buttons inside panel headers use light-on-light bg — need dark text */
+body.light-mode .bkd-trend-hdr .slicer-btn,
+body.light-mode .bkd-chart-hdr .slicer-btn{color:var(--text);border-color:var(--border2);}
+body.light-mode .bkd-trend-hdr .slicer-btn:hover,
+body.light-mode .bkd-chart-hdr .slicer-btn:hover{border-color:var(--accent);color:var(--accent);}
+body.light-mode .bkd-trend-hdr .slicer-btn.active,
+body.light-mode .bkd-chart-hdr .slicer-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+body.light-mode .auto-btn{color:rgba(255,255,255,.5);border-color:rgba(255,255,255,.15);}
+body.light-mode .auto-btn:hover{color:var(--accent);border-color:var(--accent);}
+body.light-mode .auto-btn.on{background:var(--accent-bg);border-color:var(--accent);color:var(--accent);}
+body.light-mode .btn-icon{color:rgba(255,255,255,.5);border-color:rgba(255,255,255,.15);}
+body.light-mode .btn-icon:hover{color:var(--accent);border-color:var(--accent);}
+body.light-mode .ww-pill{color:var(--accent);}
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div class="hdr-left">
+    <!-- SunPower wordmark SVG — matches Design Andon Board -->
+    <svg height="22" viewBox="0 0 220 40" xmlns="http://www.w3.org/2000/svg" aria-label="SunPower">
+      <text font-family="'Bebas Neue',sans-serif" font-size="36" fill="#eef0f4" y="32" letter-spacing="1">SUN</text>
+      <!-- The "O" in POWER rendered as an orange circle/sun mark -->
+      <text font-family="'Bebas Neue',sans-serif" font-size="36" fill="#eef0f4" y="32" x="72" letter-spacing="1">P</text>
+      <circle cx="109" cy="18" r="11" fill="none" stroke="#F7941D" stroke-width="3"/>
+      <circle cx="109" cy="18" r="4" fill="#F7941D"/>
+      <text font-family="'Bebas Neue',sans-serif" font-size="36" fill="#eef0f4" y="32" x="122" letter-spacing="1">WER</text>
+    </svg>
+    <div class="board-title">NH OPS <span>DASHBOARD</span></div>
+    <div class="ww-pill" id="hdr-ww">—</div>
+  </div>
+  <div class="hdr-center">
+    <button class="nav-btn active" onclick="showScreen(0)">S1 · Scorecard</button>
+    <button class="nav-btn" onclick="showScreen(1)">S2 · Breakdown</button>
+  </div>
+  <div class="hdr-right">
+    <div class="team-btns" id="team-btns">
+      <button class="slicer-btn active" onclick="setTeam('all')">All</button>
+      <button class="slicer-btn" onclick="setTeam('IX & OHO')">IX &amp; OHO</button>
+      <button class="slicer-btn" onclick="setTeam('PC & SAC')">PC &amp; SAC</button>
+    </div>
+    <div style="width:1px;height:18px;background:var(--border2);margin:0 2px;"></div>
+    <div class="team-btns" id="q-btns">
+      <button class="slicer-btn active" onclick="setQ('all')">All Qtrs</button>
+      <button class="slicer-btn" onclick="setQ('Q1')">Q1</button>
+      <button class="slicer-btn" onclick="setQ('Q2')">Q2</button>
+      <button class="slicer-btn" onclick="setQ('Q3')">Q3</button>
+      <button class="slicer-btn" onclick="setQ('Q4')">Q4</button>
+    </div>
+    <button class="auto-btn" id="ap-btn" onclick="toggleAP()">▶ Auto</button>
+    <button class="btn-icon" onclick="toggleTheme()" id="theme-btn" title="Toggle theme">☀</button>
+  </div>
+</div>
+
+<div id="main">
+  <div class="screen active" id="s0">
+    <div class="sec-hdr"><div class="sec-title">Individual Scorecard</div><div class="sec-sub">Ranked by score — current work week</div><div class="sec-rule"></div></div>
+    <div class="sc-grid" id="sc-grid"></div>
+  </div>
+  <div class="screen" id="s1">
+    <div class="sec-hdr"><div class="sec-title">Score Trend &amp; Category Breakdown</div><div class="sec-sub">Weekly trend (left) · Category comparison per employee (right)</div><div class="sec-rule"></div></div>
+    <div class="bkd-split">
+      <div class="bkd-trend-panel">
+        <div class="bkd-trend-hdr">
+          <div style="display:flex;flex-direction:column;gap:3px;">
+            <div class="bkd-trend-title" id="trend-title">Score Trend</div>
+            <div style="font-size:.6rem;color:var(--dim);font-family:'DM Mono',monospace;" id="trend-period-label"></div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <div class="bkd-trend-legend" id="trend-legend"></div>
+            <div style="display:flex;gap:3px;margin-left:8px;">
+              <button class="slicer-btn active" id="tp-wk" onclick="setTrendPeriod('week')">By Week</button>
+              <button class="slicer-btn" id="tp-mo" onclick="setTrendPeriod('month')">By Month</button>
+              <button class="slicer-btn" id="tp-qt" onclick="setTrendPeriod('quarter')">By Quarter</button>
+            </div>
+          </div>
+        </div>
+        <div class="bkd-trend-chart"><canvas id="trendChart"></canvas></div>
+      </div>
+      <div class="bkd-chart-panel">
+        <div class="bkd-chart-hdr">
+          <div class="bkd-chart-title" id="bkd-chart-title">Employees — PROD</div>
+          <div style="display:flex;gap:3px;align-items:center;">
+            <button class="slicer-btn active" id="cf-prod" onclick="setCatFilter('prod')">PROD</button>
+            <button class="slicer-btn" id="cf-sla"  onclick="setCatFilter('sla')">SLA</button>
+            <button class="slicer-btn" id="cf-qual" onclick="setCatFilter('qual')">QUAL</button>
+            <button class="slicer-btn" id="cf-att"  onclick="setCatFilter('att')">ATT</button>
+            <button class="slicer-btn" id="cf-sup"  onclick="setCatFilter('sup')">SUP</button>
+            <button class="btn-icon" onclick="openSettings()" title="Edit targets &amp; tags" style="margin-left:4px;font-size:11px;">✎</button>
+          </div>
+        </div>
+        <div class="bkd-chart-body" id="bkd-chart-body"></div>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="ap-bar"><div id="ap-prog"></div></div>
+
+<!-- SETTINGS OVERLAY -->
+<div id="settings-overlay" onclick="closeSettingsOutside(event)">
+  <div class="settings-panel">
+    <div class="settings-panel-hdr">
+      <div class="settings-title">NH OPS <span>SETTINGS</span></div>
+      <button class="settings-close" onclick="closeSettings()">✕</button>
+    </div>
+    <div class="settings-section">
+      <div class="settings-section-title">Category Targets</div>
+      <div class="settings-row">
+        <div><div class="settings-row-label">Productivity &amp; Efficiency</div><div class="settings-row-sub">Max: 30%</div></div>
+        <input class="settings-input" id="t-prod" type="number" min="0" max="30" step="0.5" value="27">
+        <span style="font-size:.65rem;color:var(--dim);">%</span>
+      </div>
+      <div class="settings-row">
+        <div><div class="settings-row-label">Service Level Agreement</div><div class="settings-row-sub">Max: 20%</div></div>
+        <input class="settings-input" id="t-sla" type="number" min="0" max="20" step="0.5" value="18">
+        <span style="font-size:.65rem;color:var(--dim);">%</span>
+      </div>
+      <div class="settings-row">
+        <div><div class="settings-row-label">Quality</div><div class="settings-row-sub">Max: 20%</div></div>
+        <input class="settings-input" id="t-qual" type="number" min="0" max="20" step="0.5" value="18">
+        <span style="font-size:.65rem;color:var(--dim);">%</span>
+      </div>
+      <div class="settings-row">
+        <div><div class="settings-row-label">Attendance</div><div class="settings-row-sub">Max: 15%</div></div>
+        <input class="settings-input" id="t-att" type="number" min="0" max="15" step="0.5" value="13.5">
+        <span style="font-size:.65rem;color:var(--dim);">%</span>
+      </div>
+      <div class="settings-row">
+        <div><div class="settings-row-label">Supervisor / Mgr Task</div><div class="settings-row-sub">Max: 15%</div></div>
+        <input class="settings-input" id="t-sup" type="number" min="0" max="15" step="0.5" value="13.5">
+        <span style="font-size:.65rem;color:var(--dim);">%</span>
+      </div>
+    </div>
+    <div class="settings-section">
+      <div class="settings-section-title">NCG Members <span style="color:var(--dim);font-size:.58rem;">— enter employee codes, comma-separated</span></div>
+      <textarea class="settings-tags-input" id="s-ncg" placeholder="e.g. JOA, KBV, MOM"></textarea>
+    </div>
+    <div class="settings-section">
+      <div class="settings-section-title">New Hire Members <span style="color:var(--dim);font-size:.58rem;">— enter employee codes, comma-separated</span></div>
+      <textarea class="settings-tags-input" id="s-newhire" placeholder="e.g. AUF, KSB"></textarea>
+    </div>
+    <button class="settings-save" onclick="saveSettings()">Save &amp; Apply</button>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   DATA — parsed from NH_OPS_Scorecard_Criteria_.xlsx
+   Individual Scorecard sheet → scores/ranks
+   IX OHO / PC SAC sheets    → category breakdowns
+   currentWW = last week with any data (auto-detected)
+   ═══════════════════════════════════════════════════════════════ */
+const DATA = {
+  "weeks":["WW14","WW15","WW16","WW17","WW18","WW19","WW20","WW21","WW22","WW23","WW24","WW25","WW26"],
+  "currentWW":"WW19",
+  "employees":[
+    {"code":"JOA","name":"James Avila","jg":"41-1","team":"IX & OHO","manager":"GMD","managerName":"Gemainne De Leon",
+     "scores":{"WW14":null,"WW15":null,"WW16":null,"WW17":null,"WW18":null,"WW19":93,"WW20":null,"WW21":null,"WW22":null,"WW23":null,"WW24":null,"WW25":null,"WW26":null},
+     "cats":{"prod":22.0,"sla":30.0,"qual":20.0,"att":15.0,"sup":10.0}},
+    {"code":"JSB","name":"Jeffry Burgos","jg":"41-2","team":"IX & OHO","manager":"GMD","managerName":"Gemainne De Leon",
+     "scores":{"WW14":null,"WW15":null,"WW16":null,"WW17":null,"WW18":null,"WW19":93,"WW20":null,"WW21":null,"WW22":null,"WW23":null,"WW24":null,"WW25":null,"WW26":null},
+     "cats":{"prod":25.0,"sla":28.0,"qual":20.0,"att":15.0,"sup":10.0}},
+    {"code":"CZH","name":"Christine Hernandez","jg":"41-2","team":"IX & OHO","manager":"GMD","managerName":"Gemainne De Leon",
+     "scores":{"WW14":null,"WW15":null,"WW16":null,"WW17":null,"WW18":null,"WW19":89,"WW20":null,"WW21":null,"WW22":null,"WW23":null,"WW24":null,"WW25":null,"WW26":null},
+     "cats":{"prod":25.0,"sla":25.0,"qual":20.0,"att":9.0,"sup":10.0}},
+    {"code":"GLI","name":"Godofredo Intia Jr.","jg":"42-1","team":"IX & OHO","manager":"GMD","managerName":"Gemainne De Leon",
+     "scores":{"WW14":null,"WW15":null,"WW16":null,"WW17":null,"WW18":null,"WW19":65,"WW20":null,"WW21":null,"WW22":null,"WW23":null,"WW24":null,"WW25":null,"WW26":null},
+     "cats":{"prod":10.0,"sla":20.0,"qual":10.0,"att":15.0,"sup":10.0}},
+    {"code":"GSD","name":"Gloddie Mae Due","jg":"40","team":"IX & OHO","manager":"GMD","managerName":"Gemainne De Leon",
+     "scores":{"WW14":null,"WW15":null,"WW16":null,"WW17":null,"WW18":null,"WW19":63,"WW20":null,"WW21":null,"WW22":null,"WW23":null,"WW24":null,"WW25":null,"WW26":null},
+     "cats":{"prod":25.0,"sla":8.0,"qual":20.0,"att":15.0,"sup":null}},
+    {"code":"MOM","name":"Ma. Aurora Magnaye","jg":"43-1","team":"IX & OHO","manager":"GMD","managerName":"Gemainne De Leon",
+     "scores":{"WW14":null,"WW15":null,"WW16":null,"WW17":null,"WW18":null,"WW19":91,"WW20":null,"WW21":null,"WW22":null,"WW23":null,"WW24":null,"WW25":null,"WW26":null},
+     "cats":{"prod":21.0,"sla":15.0,"qual":20.0,"att":15.0,"sup":20.0}},
+    {"code":"KOM","name":"Kith Martinez","jg":"41-1","team":"IX & OHO","manager":"GMD","managerName":"Gemainne De Leon",
+     "scores":{"WW14":null,"WW15":null,"WW16":null,"WW17":null,"WW18":null,"WW19":86,"WW20":null,"WW21":null,"WW22":null,"WW23":null,"WW24":null,"WW25":null,"WW26":null},
+     "cats":{"prod":25.0,"sla":26.0,"qual":20.0,"att":15.0,"sup":5.0}},
+    {"code":"RET","name":"Rosanna Tamonang","jg":"42-1","team":"IX & OHO","manager":"GMD","managerName":"Gemainne De Leon",
+     "scores":{"WW14":null,"WW15":null,"WW16":null,"WW17":null,"WW18":null,"WW19":92,"WW20":null,"WW21":null,"WW22":null,"WW23":null,"WW24":null,"WW25":null,"WW26":null},
+     "cats":{"prod":15.0,"sla":25.0,"qual":10.0,"att":12.0,"sup":30.0}},
+    {"code":"KBV","name":"Kelsey Shane Valencia","jg":"41-1","team":"IX & OHO","manager":"GMD","managerName":"Gemainne De Leon",
+     "scores":{"WW14":null,"WW15":null,"WW16":null,"WW17":null,"WW18":null,"WW19":91,"WW20":null,"WW21":null,"WW22":null,"WW23":null,"WW24":null,"WW25":null,"WW26":null},
+     "cats":{"prod":19.0,"sla":30.0,"qual":20.0,"att":15.0,"sup":10.0}},
+    {"code":"JJB","name":"Joanne Baccay","jg":"43-1","team":"PC & SAC","manager":"MEF","managerName":"Mary Ann Francisco",
+     "scores":{"WW14":null,"WW15":null,"WW16":null,"WW17":null,"WW18":null,"WW19":null,"WW20":null,"WW21":null,"WW22":null,"WW23":null,"WW24":null,"WW25":null,"WW26":null},
+     "cats":{"prod":null,"sla":null,"qual":null,"att":null,"sup":null}},
+    {"code":"CBH","name":"Cinderella Hernandez","jg":"41-1","team":"PC & SAC","manager":"MEF","managerName":"Mary Ann Francisco",
+     "scores":{"WW14":null,"WW15":null,"WW16":null,"WW17":null,"WW18":null,"WW19":null,"WW20":null,"WW21":null,"WW22":null,"WW23":null,"WW24":null,"WW25":null,"WW26":null},
+     "cats":{"prod":null,"sla":null,"qual":null,"att":null,"sup":null}},
+    {"code":"PPV","name":"Perfecto Viray","jg":"42-1","team":"PC & SAC","manager":"MEF","managerName":"Mary Ann Francisco",
+     "scores":{"WW14":null,"WW15":null,"WW16":null,"WW17":null,"WW18":null,"WW19":null,"WW20":null,"WW21":null,"WW22":null,"WW23":null,"WW24":null,"WW25":null,"WW26":null},
+     "cats":{"prod":null,"sla":null,"qual":null,"att":null,"sup":null}},
+    {"code":"AUF","name":"Angelica May Franco","jg":"41-1","team":"PC & SAC","manager":"MEF","managerName":"Mary Ann Francisco",
+     "scores":{"WW14":null,"WW15":null,"WW16":null,"WW17":null,"WW18":null,"WW19":null,"WW20":null,"WW21":null,"WW22":null,"WW23":null,"WW24":null,"WW25":null,"WW26":null},
+     "cats":{"prod":null,"sla":null,"qual":null,"att":null,"sup":null}},
+    {"code":"KPC","name":"Kevin Carait","jg":"41-1","team":"PC & SAC","manager":"MEF","managerName":"Mary Ann Francisco",
+     "scores":{"WW14":null,"WW15":null,"WW16":null,"WW17":null,"WW18":null,"WW19":null,"WW20":null,"WW21":null,"WW22":null,"WW23":null,"WW24":null,"WW25":null,"WW26":null},
+     "cats":{"prod":null,"sla":null,"qual":null,"att":null,"sup":null}},
+    {"code":"KSB","name":"Kent Balangue","jg":"41-1","team":"PC & SAC","manager":"MEF","managerName":"Mary Ann Francisco",
+     "scores":{"WW14":null,"WW15":null,"WW16":null,"WW17":null,"WW18":null,"WW19":null,"WW20":null,"WW21":null,"WW22":null,"WW23":null,"WW24":null,"WW25":null,"WW26":null},
+     "cats":{"prod":null,"sla":null,"qual":null,"att":null,"sup":null}}
+  ]
+};
+
+const WEEKS=DATA.weeks, CWW=DATA.currentWW, EMPS=DATA.employees;
+
+/* ── Category targets (editable via settings) ── */
+let CAT_TARGETS={prod:27, sla:18, qual:18, att:13.5, sup:13.5};
+
+/* ── Tag lists (editable via settings) ── */
+let NCG_MEMBERS=[];
+let NEW_HIRES=[];
+
+/* ── Settings helpers ── */
+function openSettings(){
+  document.getElementById('t-prod').value=CAT_TARGETS.prod;
+  document.getElementById('t-sla').value=CAT_TARGETS.sla;
+  document.getElementById('t-qual').value=CAT_TARGETS.qual;
+  document.getElementById('t-att').value=CAT_TARGETS.att;
+  document.getElementById('t-sup').value=CAT_TARGETS.sup;
+  document.getElementById('s-ncg').value=NCG_MEMBERS.join(', ');
+  document.getElementById('s-newhire').value=NEW_HIRES.join(', ');
+  document.getElementById('settings-overlay').classList.add('open');
+}
+function closeSettings(){document.getElementById('settings-overlay').classList.remove('open');}
+function closeSettingsOutside(e){if(e.target===document.getElementById('settings-overlay'))closeSettings();}
+function saveSettings(){
+  CAT_TARGETS={
+    prod:parseFloat(document.getElementById('t-prod').value)||27,
+    sla: parseFloat(document.getElementById('t-sla').value)||18,
+    qual:parseFloat(document.getElementById('t-qual').value)||18,
+    att: parseFloat(document.getElementById('t-att').value)||13.5,
+    sup: parseFloat(document.getElementById('t-sup').value)||13.5,
+  };
+  NCG_MEMBERS=document.getElementById('s-ncg').value.split(',').map(s=>s.trim()).filter(Boolean);
+  NEW_HIRES=document.getElementById('s-newhire').value.split(',').map(s=>s.trim()).filter(Boolean);
+  closeSettings();
+  showScreen(curScreen);
+}
+const AVCOLS=['#E05A2B','#2E7CF6','#2FD98F','#F5C842','#A855F7','#EC4899','#14B8A6','#F97316','#6366F1','#84CC16','#F43F5E','#0EA5E9','#8B5CF6','#10B981','#EAB308','#06B6D4'];
+
+let curTeam='all', curQ='all', curScreen=0, isAP=false, apTimer=null, trendPeriod='week', activeCat='prod';
+const AP_DUR=10000;
+
+/* WW number → quarter string */
+function wwToQ(ww){const n=parseInt(ww.replace('WW',''));if(n<=13)return 'Q1';if(n<=26)return 'Q2';if(n<=39)return 'Q3';return 'Q4';}
+
+/* Weeks visible under current quarter filter */
+function visibleWeeks(){return curQ==='all'?WEEKS:WEEKS.filter(ww=>wwToQ(ww)===curQ);}
+
+/* Current WW scoped to visible weeks (last with data, else last visible) */
+function scopedCWW(){
+  const vw=visibleWeeks();
+  const last=[...vw].reverse().find(ww=>EMPS.some(e=>e.scores[ww]!==null));
+  return last||vw[vw.length-1];
+}
+
+function cls(v){if(v===null||v===undefined)return 'blank';if(v>=90)return 'high';if(v>=75)return 'mid';return 'low';}
+function filtered(){return curTeam==='all'?EMPS:EMPS.filter(e=>e.team===curTeam);}
+function avcol(emp){return AVCOLS[EMPS.indexOf(emp)%AVCOLS.length];}
+function cs(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
+
+/* SCREEN 1 — SCORECARD */
+function renderScorecard(){
+  const emps=filtered();
+  const vw=visibleWeeks();
+  const cw=scopedCWW();
+  const sorted=[...emps].sort((a,b)=>((b.scores[cw]??-1)-(a.scores[cw]??-1)));
+  const rm={};sorted.forEach((e,i)=>{rm[e.code]=e.scores[cw]!==null?i+1:null;});
+  document.getElementById('hdr-ww').textContent=cw;
+
+  document.getElementById('sc-grid').innerHTML=sorted.map(emp=>{
+    const sc=emp.scores[cw], c=cls(sc), rank=rm[emp.code];
+    const rtag=rank===1?'gold':rank===2?'silver':rank===3?'bronze':rank?'norm':'none';
+    const rtxt=rank===1?'🥇 RANK 1':rank===2?'🥈 RANK 2':rank===3?'🥉 RANK 3':rank?`RANK ${rank}`:'NO DATA';
+
+    /* Score bar */
+    const barW=sc!==null?sc:0;
+
+    /* Category cells — prod, sla, qual, att, sup */
+    const catDefs=[
+      {key:'prod',label:'PROD',wt:'×0.30',cls:'cc-prod',max:30,col:'#4FC3F7'},
+      {key:'sla', label:'SLA', wt:'×0.20',cls:'cc-sla', max:20,col:'#69F0AE'},
+      {key:'qual',label:'QUAL',wt:'×0.20',cls:'cc-qual',max:20,col:'#CE93D8'},
+      {key:'att', label:'ATT', wt:'×0.15',cls:'cc-att', max:15,col:'#FFD54F'},
+      {key:'sup', label:'SUP', wt:'×0.15',cls:'cc-sup', max:15,col:'#FFB74D'},
+    ];
+    const catHTML=catDefs.map(d=>{
+      const v=emp.cats[d.key];
+      const pct=v!==null?Math.min(v/d.max,1):0;
+      /* Gradient: 0.25 opacity at 0%, full opacity at 100% of max */
+      const opacity=v!==null?(0.25+pct*0.75).toFixed(2):0.18;
+      const valColor=v!==null?`color:${d.col};opacity:${opacity};`:`color:var(--dim);`;
+      return `<div class="cat-cell ${d.cls}">
+        <div class="cc-name">${d.label}</div>
+        <div class="cc-val" style="${valColor}">${v!==null?v:'—'}</div>
+        <div class="cc-wt">${d.wt}</div>
+      </div>`;
+    }).join('');
+
+    /* WW dots */
+    const dots=vw.map(ww=>{
+      const h=emp.scores[ww]!==null;
+      const dc=ww===cw?'cur':h?'has':'no';
+      return `<div class="wdot ${dc}" title="${ww}: ${h?emp.scores[ww]+'%':'N/A'}">${ww.replace('WW','')}</div>`;
+    }).join('');
+
+    return `<div class="emp-card">
+      <div class="card-top">
+        <div class="card-left">
+          <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:3px;">
+            <div class="d-name">${emp.name}</div>
+            ${NCG_MEMBERS.includes(emp.code)||NCG_MEMBERS.includes(emp.name)?`<span class="tag tag-ncg">NCG</span>`:''}
+            ${NEW_HIRES.includes(emp.code)||NEW_HIRES.includes(emp.name)?`<span class="tag tag-newhire">NEW HIRE</span>`:''}
+          </div>
+          <div class="d-fullname">${emp.code}</div>
+          <div class="d-meta">${emp.team}</div>
+        </div>
+        <div class="card-right">
+          <div class="score-badge">
+            <div class="score-num c-${c}">${sc!==null?sc:'—'}</div>
+            <div class="score-unit">%</div>
+          </div>
+          <div class="rank-tag ${rtag}">${rtxt}</div>
+        </div>
+      </div>
+      <div class="score-bar-strip">
+        <div class="sbar-label">SCORE</div>
+        <div class="sbar-bg"><div class="sbar-fill c-${c}" style="width:${barW}%"></div></div>
+        <div class="sbar-val c-${c}">${sc!==null?sc+'%':'N/A'}</div>
+      </div>
+      <div class="cat-cells">${catHTML}</div>
+      <div class="ww-strip">
+        <div class="ww-strip-label">${cw}${curQ!=='all'?' · '+curQ:''}</div>
+        ${dots}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* SCREEN 2 — TREND (left, 70%) + CATEGORY BREAKDOWN (right, 30%) */
+let trendChart=null;
+
+function wwToMonth(ww){
+  const n=parseInt(ww.replace('WW',''));
+  const jan5=new Date(2026,0,5);
+  const d=new Date(jan5.getTime()+(n-1)*7*86400000);
+  return d.toLocaleString('default',{month:'short',year:'2-digit'});
+}
+
+function aggregateByPeriod(sorted, vw, period){
+  if(period==='week') return {labels:vw, dataFn:(emp)=>vw.map(ww=>emp.scores[ww])};
+  const groups=[]; const seen=new Set();
+  vw.forEach(ww=>{
+    const key=period==='month'?wwToMonth(ww):wwToQ(ww);
+    if(!seen.has(key)){seen.add(key);groups.push({key,weeks:[]});}
+    groups[groups.length-1].weeks.push(ww);
+  });
+  const labels=groups.map(g=>g.key);
+  const dataFn=(emp)=>groups.map(g=>{
+    const vals=g.weeks.map(ww=>emp.scores[ww]).filter(v=>v!==null);
+    return vals.length?Math.round(vals.reduce((a,b)=>a+b,0)/vals.length):null;
+  });
+  return {labels, dataFn};
+}
+
+function setTrendPeriod(p){
+  trendPeriod=p;
+  document.getElementById('tp-wk').classList.toggle('active',p==='week');
+  document.getElementById('tp-mo').classList.toggle('active',p==='month');
+  document.getElementById('tp-qt').classList.toggle('active',p==='quarter');
+  if(curScreen===1) renderBreakdown();
+}
+
+function setCatFilter(cat){
+  activeCat=cat;
+  ['prod','sla','qual','att','sup'].forEach(k=>{
+    document.getElementById('cf-'+k).classList.toggle('active',k===cat);
+  });
+  if(curScreen===1) renderBreakdown();
+}
+
+function renderBreakdown(){
+  const emps=filtered();
+  const cw=scopedCWW();
+  const vw=visibleWeeks();
+  const sorted=[...emps].sort((a,b)=>((b.scores[cw]??-1)-(a.scores[cw]??-1)));
+  const isLight=document.body.classList.contains('light-mode');
+  const CHTCOLS=['#F7941D','#69F0AE','#4DA6FF','#FFD54F','#CE93D8','#EC4899','#14B8A6','#FF7043','#84CC16','#F43F5E'];
+  const gc=isLight?'rgba(0,0,0,.06)':'rgba(255,255,255,.05)';
+  const lc_x=isLight?'#555':'rgba(238,240,244,.55)';
+  const lc_y=isLight?'#777':'rgba(238,240,244,.35)';
+
+  /* Period aggregation */
+  const {labels:periodLabels, dataFn}=aggregateByPeriod(sorted, vw, trendPeriod);
+
+  /* Title + subtitle */
+  const qLabel=curQ!=='all'?' · '+curQ:'';
+  const teamLabel=curTeam==='all'?'All Teams':curTeam;
+  document.getElementById('trend-title').textContent=`${teamLabel}${qLabel} — Score Trend`;
+  const subDesc={week:vw[0]+' – '+vw[vw.length-1]+' · Weekly', month:'Monthly avg', quarter:'Quarterly avg'};
+  document.getElementById('trend-period-label').textContent=subDesc[trendPeriod]||'';
+
+  /* Datasets — SLA chart style */
+  const datasets=sorted.map((emp,i)=>{
+    const col=CHTCOLS[i%CHTCOLS.length];
+    return{
+      label:emp.code, data:dataFn(emp),
+      borderColor:col, backgroundColor:col+'22',
+      pointBackgroundColor:col,
+      pointRadius:4, pointHoverRadius:6,
+      borderWidth:2.5, tension:.35, spanGaps:true, fill:false
+    };
+  });
+
+  if(trendChart)trendChart.destroy();
+  trendChart=new Chart(document.getElementById('trendChart').getContext('2d'),{
+    type:'line',
+    data:{labels:periodLabels, datasets},
+    options:{
+      responsive:true, maintainAspectRatio:false,
+      interaction:{mode:'index', intersect:false},
+      plugins:{
+        legend:{display:false},
+        tooltip:{
+          backgroundColor:isLight?'#fff':'#0f1217',
+          borderColor:'#F7941D', borderWidth:1,
+          titleColor:isLight?'#0a0a0a':'#eef0f4',
+          bodyColor:lc_x, padding:10,
+          titleFont:{family:'DM Sans',size:11},
+          bodyFont:{family:'DM Mono',size:11},
+          callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y!==null?c.parsed.y+'%':'—'}`}
+        }
+      },
+      scales:{
+        x:{
+          ticks:{color:lc_x, font:{family:'DM Mono',size:11}, autoSkip:false, maxRotation:0},
+          grid:{color:gc}
+        },
+        y:{
+          min:0, max:100,
+          ticks:{color:lc_y, font:{family:'DM Mono',size:11}, callback:v=>v+'%'},
+          grid:{color:gc},
+          title:{display:true, text:'Score %', color:lc_y, font:{size:10, family:'DM Mono'}}
+        }
+      }
+    }
+  });
+
+  /* Legend */
+  document.getElementById('trend-legend').innerHTML=sorted.map((emp,i)=>{
+    const col=CHTCOLS[i%CHTCOLS.length];
+    return `<div class="bkd-trend-leg-item"><div class="bkd-trend-leg-dot" style="background:${col}"></div>${emp.code}</div>`;
+  }).join('');
+
+  /* RIGHT — single category, sorted by active cat value */
+  const catDefs={
+    prod:{label:'Productivity & Efficiency',max:30,col:'#4FC3F7'},
+    sla: {label:'Service Level Agreement',  max:20,col:'#69F0AE'},
+    qual:{label:'Quality',                  max:20,col:'#CE93D8'},
+    att: {label:'Attendance',               max:15,col:'#FFD54F'},
+    sup: {label:'Supervisor / Mgr Task',    max:15,col:'#FFB74D'},
+  };
+  const cat=catDefs[activeCat];
+
+  /* Sort by active cat value desc, nulls at bottom */
+  const catSorted=[...filtered()].sort((a,b)=>((b.cats[activeCat]??-1)-(a.cats[activeCat]??-1)));
+
+  /* Update panel title */
+  document.getElementById('bkd-chart-title').textContent=`Employees — ${activeCat.toUpperCase()}`;
+
+  const targetPct=Math.min((CAT_TARGETS[activeCat]/cat.max)*100,100);
+
+  document.getElementById('bkd-chart-body').innerHTML=catSorted.map(emp=>{
+    const v=emp.cats[activeCat];
+    const sc=emp.scores[cw], c=cls(sc);
+    const pct=v!==null?Math.min((v/cat.max)*100,100):0;
+    const opacity=v!==null?(0.25+(pct/100)*0.75).toFixed(2):0.2;
+    const tagsHTML=[
+      NCG_MEMBERS.includes(emp.code)||NCG_MEMBERS.includes(emp.name)?'<span class="tag tag-ncg" style="font-size:.45rem;padding:1px 5px;">NCG</span>':'',
+      NEW_HIRES.includes(emp.code)||NEW_HIRES.includes(emp.name)?'<span class="tag tag-newhire" style="font-size:.45rem;padding:1px 5px;">NEW HIRE</span>':''
+    ].filter(Boolean).join('');
+    return `<div class="bkd-chart-row">
+      <div class="bkd-chart-name" style="display:flex;flex-direction:column;gap:2px;">
+        <span>${emp.name.split(' ')[0]} ${emp.name.split(' ').slice(-1)[0]}</span>
+        ${tagsHTML?`<div style="display:flex;gap:3px;">${tagsHTML}</div>`:''}
+      </div>
+      <div class="bkd-chart-bars" style="flex-direction:column;gap:0;">
+        <div class="bkd-chart-bar-row">
+          <div class="bkd-chart-bar-bg" style="height:10px;position:relative;">
+            <div class="bkd-chart-bar-fill" style="width:${pct}%;background:${cat.col};opacity:${opacity}"></div>
+            <div class="target-marker" style="left:${targetPct}%" title="Target: ${CAT_TARGETS[activeCat]}%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bkd-chart-score" style="${v!==null?`color:${cat.col};opacity:${opacity}`:'color:var(--dim)'}">${v!==null?v+'%':'—'}</div>
+    </div>`;
+  }).join('');
+}
+
+/* NAV */
+function showScreen(n){
+  document.querySelectorAll('.screen').forEach((s,i)=>s.classList.toggle('active',i===n));
+  document.querySelectorAll('.nav-btn').forEach((b,i)=>b.classList.toggle('active',i===n));
+  curScreen=n;
+  if(n===0)renderScorecard();
+  if(n===1)renderBreakdown();
+}
+
+function setTeam(t){
+  curTeam=t;
+  document.querySelectorAll('#team-btns .slicer-btn').forEach(b=>{
+    const txt=b.textContent.trim();
+    b.classList.toggle('active',(t==='all'&&txt==='All')||(t!=='all'&&b.textContent.replace(/&amp;/g,'&').trim()===t));
+  });
+  showScreen(curScreen);
+}
+
+function setQ(q){
+  curQ=q;
+  document.querySelectorAll('#q-btns .slicer-btn').forEach(b=>{
+    const txt=b.textContent.trim();
+    b.classList.toggle('active',(q==='all'&&txt==='All Qtrs')||(q!=='all'&&txt===q));
+  });
+  showScreen(curScreen);
+}
+
+/* THEME */
+function toggleTheme(){
+  const light=document.body.classList.toggle('light-mode');
+  document.getElementById('theme-btn').textContent=light?'🌙':'☀';
+  try{localStorage.setItem('nhops_theme',light?'light':'dark');}catch(e){}
+  if(curScreen===1)renderBreakdown();
+}
+(function(){try{if(localStorage.getItem('nhops_theme')==='light'){document.body.classList.add('light-mode');document.getElementById('theme-btn').textContent='🌙';}}catch(e){}})();
+
+/* AUTOPLAY */
+function toggleAP(){isAP?stopAP():startAP();}
+function startAP(){
+  isAP=true;const btn=document.getElementById('ap-btn');
+  btn.textContent='⏹ Stop';btn.classList.add('on');
+  document.getElementById('ap-bar').style.display='block';runAP();
+}
+function stopAP(){
+  isAP=false;clearTimeout(apTimer);
+  const btn=document.getElementById('ap-btn');btn.textContent='▶ Auto';btn.classList.remove('on');
+  document.getElementById('ap-bar').style.display='none';
+  const p=document.getElementById('ap-prog');p.style.transition='none';p.style.width='0%';
+}
+function runAP(){
+  if(!isAP)return;
+  showScreen((curScreen+1)%2);
+  const p=document.getElementById('ap-prog');p.style.transition='none';p.style.width='0%';
+  setTimeout(()=>{p.style.transition=`width ${AP_DUR}ms linear`;p.style.width='100%';},50);
+  apTimer=setTimeout(runAP,AP_DUR);
+}
+
+/* INIT */
+(function(){
+  /* WW pill: show range of weeks that have any data, or just current if only one */
+  const wwsWithData=WEEKS.filter(ww=>EMPS.some(e=>e.scores[ww]!==null));
+  const pillText=wwsWithData.length>1
+    ?`${wwsWithData[0]} – ${wwsWithData[wwsWithData.length-1]}`
+    :CWW;
+  document.getElementById('hdr-ww').textContent=pillText;
+})();
+showScreen(0);
+</script>
+</body>
+</html>
