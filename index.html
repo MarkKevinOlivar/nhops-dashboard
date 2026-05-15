@@ -6,6 +6,7 @@
 <title>NH Ops Dashboard — Release 1</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 /* ── ROOT: matches Design Andon Board exactly ── */
 :root {
@@ -533,6 +534,39 @@ body.light-mode .ww-pill{color:var(--accent);}
       <div class="settings-title">NH OPS <span>SETTINGS</span></div>
       <button class="settings-close" onclick="closeSettings()">✕</button>
     </div>
+
+    <!-- GITHUB CONFIG -->
+    <div class="settings-section">
+      <div class="settings-section-title">GitHub Configuration</div>
+      <div class="settings-row">
+        <div><div class="settings-row-label">Repository</div><div class="settings-row-sub">username/repo-name</div></div>
+        <input class="settings-input" id="gh-repo" type="text" placeholder="markkevinolivar/nhops-dashboard" style="width:200px;text-align:left;">
+      </div>
+      <div class="settings-row">
+        <div><div class="settings-row-label">GitHub Token</div><div class="settings-row-sub">Needs repo scope</div></div>
+        <input class="settings-input" id="gh-token" type="password" placeholder="ghp_..." style="width:200px;text-align:left;">
+      </div>
+    </div>
+
+    <!-- EXCEL UPLOAD -->
+    <div class="settings-section">
+      <div class="settings-section-title">Upload Scorecard Excel</div>
+      <div style="font-size:.65rem;color:var(--dim);margin-bottom:.6rem;">Upload NH_OPS_Scorecard_Criteria_.xlsx — data will be parsed and pushed to GitHub automatically.</div>
+      <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;">
+        <div style="background:var(--accent-bg);border:1px solid var(--accent);color:var(--accent);font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:600;padding:.35rem .8rem;border-radius:4px;white-space:nowrap;">
+          📂 Choose Excel file
+        </div>
+        <div style="font-size:.68rem;color:var(--muted);" id="excel-filename">No file chosen</div>
+        <input type="file" id="excel-upload" accept=".xlsx" style="display:none;" onchange="onExcelSelected(event)">
+      </label>
+      <div id="parse-status" style="margin-top:.5rem;font-size:.65rem;color:var(--dim);min-height:16px;"></div>
+      <button class="settings-save" id="push-btn" onclick="pushToGitHub()" style="margin-top:.6rem;opacity:.5;pointer-events:none;">
+        ⬆ Parse &amp; Push to GitHub
+      </button>
+      <div id="push-status" style="margin-top:.5rem;font-size:.65rem;min-height:16px;text-align:center;"></div>
+    </div>
+
+    <!-- CATEGORY TARGETS -->
     <div class="settings-section">
       <div class="settings-section-title">Category Targets</div>
       <div class="settings-row">
@@ -561,14 +595,17 @@ body.light-mode .ww-pill{color:var(--accent);}
         <span style="font-size:.65rem;color:var(--dim);">%</span>
       </div>
     </div>
+
+    <!-- TAGS -->
     <div class="settings-section">
-      <div class="settings-section-title">NCG Members <span style="color:var(--dim);font-size:.58rem;">— enter employee codes, comma-separated</span></div>
+      <div class="settings-section-title">NCG Members <span style="color:var(--dim);font-size:.58rem;">— employee codes, comma-separated</span></div>
       <textarea class="settings-tags-input" id="s-ncg" placeholder="e.g. JOA, KBV, MOM"></textarea>
     </div>
     <div class="settings-section">
-      <div class="settings-section-title">New Hire Members <span style="color:var(--dim);font-size:.58rem;">— enter employee codes, comma-separated</span></div>
+      <div class="settings-section-title">New Hire Members <span style="color:var(--dim);font-size:.58rem;">— employee codes, comma-separated</span></div>
       <textarea class="settings-tags-input" id="s-newhire" placeholder="e.g. AUF, KSB"></textarea>
     </div>
+
     <button class="settings-save" onclick="saveSettings()">Save &amp; Apply</button>
   </div>
 </div>
@@ -634,6 +671,10 @@ const DATA = {
 
 const WEEKS=DATA.weeks, CWW=DATA.currentWW, EMPS=DATA.employees;
 
+/* ── GitHub config (persisted to localStorage) ── */
+let GH_REPO='', GH_TOKEN='';
+try{GH_REPO=localStorage.getItem('nhops_repo')||'';GH_TOKEN=localStorage.getItem('nhops_token')||'';}catch(e){}
+
 /* ── Category targets (editable via settings) ── */
 let CAT_TARGETS={prod:27, sla:18, qual:18, att:13.5, sup:13.5};
 
@@ -641,8 +682,196 @@ let CAT_TARGETS={prod:27, sla:18, qual:18, att:13.5, sup:13.5};
 let NCG_MEMBERS=[];
 let NEW_HIRES=[];
 
+/* ── Parsed Excel data (replaces hardcoded DATA when loaded from GitHub) ── */
+let LIVE_DATA=null; // null = use hardcoded DATA
+
+function liveEmps(){return LIVE_DATA?LIVE_DATA.employees:EMPS;}
+function liveWeeks(){return LIVE_DATA?LIVE_DATA.weeks:WEEKS;}
+function liveCWW(){return LIVE_DATA?LIVE_DATA.currentWW:CWW;}
+
+/* ══ EXCEL PARSER (client-side via SheetJS) ══ */
+const CATEGORIES=['Productivity & Efficiency','Service Level Agreement','Quality','Attendance','Supervisor/Manager Task'];
+const CAT_KEYS={'Productivity & Efficiency':'prod','Service Level Agreement':'sla','Quality':'qual','Attendance':'att','Supervisor/Manager Task':'sup'};
+
+let parsedExcelData=null;
+
+function onExcelSelected(evt){
+  const file=evt.target.files[0];
+  if(!file)return;
+  document.getElementById('excel-filename').textContent=file.name;
+  document.getElementById('parse-status').style.color='var(--muted)';
+  document.getElementById('parse-status').textContent='Parsing…';
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const wb=XLSX.read(e.target.result,{type:'array'});
+      parsedExcelData=parseWorkbook(wb);
+      document.getElementById('parse-status').style.color='var(--green)';
+      document.getElementById('parse-status').textContent=
+        `✓ Parsed ${parsedExcelData.employees.length} employees · Current WW: ${parsedExcelData.currentWW}`;
+      const btn=document.getElementById('push-btn');
+      btn.style.opacity='1';btn.style.pointerEvents='auto';
+    }catch(err){
+      document.getElementById('parse-status').style.color='var(--red)';
+      document.getElementById('parse-status').textContent='✗ Parse error: '+err.message;
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function parseWorkbook(wb){
+  /* ── Individual Scorecard sheet ── */
+  const ws=wb.Sheets['Individual Scorecard'];
+  if(!ws)throw new Error('Sheet "Individual Scorecard" not found');
+  const raw=XLSX.utils.sheet_to_json(ws,{header:1,defval:null});
+
+  // Row 1 = WW labels at cols 5,7,9… Row 2 = Rank/Score headers
+  const wwMap={};
+  for(let c=5;c<31;c+=2){
+    const v=raw[1]&&raw[1][c];
+    if(v!=null){
+      const ww=String(v).trim().replace(' ','');
+      wwMap[ww]={rankCol:c,scoreCol:c+1};
+    }
+  }
+  const weeks=Object.keys(wwMap);
+
+  const employees=[];
+  for(let i=3;i<raw.length;i++){
+    const row=raw[i];
+    if(!row||row[1]==null)continue;
+    const empRaw=String(row[3]||'');
+    const parts=empRaw.split(' - ');
+    const code=parts[0].trim();
+    const name=parts[1]?parts[1].trim():empRaw;
+    const mgrRaw=String(row[2]||'');
+    const mgrParts=mgrRaw.split(' - ');
+    const scores={},ranks={};
+    weeks.forEach(ww=>{
+      const s=row[wwMap[ww].scoreCol];
+      const r=row[wwMap[ww].rankCol];
+      scores[ww]=s==null?null:Math.round(parseFloat(s));
+      ranks[ww]=r==null?null:String(r);
+    });
+    employees.push({
+      code,name,jg:String(row[4]||''),
+      team:String(row[1]).trim(),
+      manager:mgrParts[0].trim(),
+      managerName:mgrParts[1]?mgrParts[1].trim():'',
+      scores,ranks,cats:{}
+    });
+  }
+
+  /* ── Team sheets for category breakdown ── */
+  ['IX OHO','PC SAC'].forEach(sheetName=>{
+    const s=wb.Sheets[sheetName];
+    if(!s)return;
+    const rows=XLSX.utils.sheet_to_json(s,{header:1,defval:null});
+    // find emp code rows (3-letter uppercase, col 0, col 1 null)
+    const empRows=[];
+    rows.forEach((r,i)=>{
+      const v=r[0]!=null?String(r[0]).trim():'';
+      if(v.length===3&&v===v.toUpperCase()&&r[1]==null)empRows.push({i,code:v});
+    });
+    empRows.forEach(({i:startRow,code},idx)=>{
+      const endRow=idx+1<empRows.length?empRows[idx+1].i:rows.length;
+      const cats={prod:0,sla:0,qual:0,att:0,sup:0};
+      let curCat=null;
+      for(let r=startRow+2;r<endRow;r++){
+        const row=rows[r];
+        if(!row)continue;
+        const catCell=row[0]!=null?String(row[0]).trim():'';
+        const wCell=row[2];
+        const sCell=row[5];
+        if(wCell==null)continue;
+        const w=parseFloat(wCell);
+        if(isNaN(w)||w>=0.5)continue;
+        if(CATEGORIES.includes(catCell))curCat=CAT_KEYS[catCell];
+        if(curCat&&sCell!=null){
+          try{cats[curCat]+=parseFloat(sCell);}catch(e){}
+        }
+      }
+      const emp=employees.find(e=>e.code===code);
+      if(emp){
+        emp.cats={
+          prod:cats.prod>0?Math.round(cats.prod*100):null,
+          sla: cats.sla>0? Math.round(cats.sla*100):null,
+          qual:cats.qual>0?Math.round(cats.qual*100):null,
+          att: cats.att>0? Math.round(cats.att*100):null,
+          sup: cats.sup>0? Math.round(cats.sup*100):null,
+        };
+      }
+    });
+  });
+
+  // detect current WW
+  const hasData={};
+  weeks.forEach(ww=>hasData[ww]=employees.some(e=>e.scores[ww]!==null));
+  const cww=[...weeks].reverse().find(ww=>hasData[ww])||weeks[weeks.length-1];
+  return{weeks,currentWW:cww,employees};
+}
+
+/* ══ GITHUB PUSH ══ */
+async function pushToGitHub(){
+  const repo=document.getElementById('gh-repo').value.trim();
+  const token=document.getElementById('gh-token').value.trim();
+  if(!repo||!token){setPS('✗ Enter repo and token first','var(--red)');return;}
+  if(!parsedExcelData){setPS('✗ Parse an Excel file first','var(--red)');return;}
+  setPS('Pushing to GitHub…','var(--muted)');
+  try{
+    const content=btoa(unescape(encodeURIComponent(JSON.stringify(parsedExcelData,null,2))));
+    // check if file exists (need SHA to update)
+    const checkRes=await fetch(`https://api.github.com/repos/${repo}/contents/data.json`,{
+      headers:{Authorization:`token ${token}`,Accept:'application/vnd.github.v3+json'}
+    });
+    let sha=undefined;
+    if(checkRes.ok){const j=await checkRes.json();sha=j.sha;}
+    const body={message:`Update data.json — ${parsedExcelData.currentWW}`,content};
+    if(sha)body.sha=sha;
+    const res=await fetch(`https://api.github.com/repos/${repo}/contents/data.json`,{
+      method:'PUT',
+      headers:{Authorization:`token ${token}`,Accept:'application/vnd.github.v3+json','Content-Type':'application/json'},
+      body:JSON.stringify(body)
+    });
+    if(!res.ok){const e=await res.json();throw new Error(e.message);}
+    // save config
+    try{localStorage.setItem('nhops_repo',repo);localStorage.setItem('nhops_token',token);}catch(e){}
+    GH_REPO=repo;GH_TOKEN=token;
+    setPS('✓ Pushed! Dashboard will load live data on next refresh.','var(--green)');
+    // apply parsed data immediately
+    LIVE_DATA=parsedExcelData;
+    applyLiveData();
+  }catch(err){setPS('✗ '+err.message,'var(--red)');}
+}
+function setPS(msg,col){
+  const el=document.getElementById('push-status');
+  el.textContent=msg;el.style.color=col;
+}
+
+/* ══ LOAD FROM GITHUB ON STARTUP ══ */
+async function loadFromGitHub(){
+  if(!GH_REPO)return;
+  try{
+    const url=`https://raw.githubusercontent.com/${GH_REPO}/main/data.json?t=${Date.now()}`;
+    const res=await fetch(url);
+    if(!res.ok)return;
+    LIVE_DATA=await res.json();
+    applyLiveData();
+  }catch(e){console.warn('Could not load from GitHub:',e);}
+}
+
+function applyLiveData(){
+  const emps=liveEmps(), weeks=liveWeeks(), cww=liveCWW();
+  const wwsWithData=weeks.filter(ww=>emps.some(e=>e.scores[ww]!==null));
+  const pillText=wwsWithData.length>1?`${wwsWithData[0]} – ${wwsWithData[wwsWithData.length-1]}`:cww;
+  document.getElementById('hdr-ww').textContent=pillText;
+  showScreen(curScreen);
+}
+
 /* ── Settings helpers ── */
 function openSettings(){
+  document.getElementById('gh-repo').value=GH_REPO;
+  document.getElementById('gh-token').value=GH_TOKEN;
   document.getElementById('t-prod').value=CAT_TARGETS.prod;
   document.getElementById('t-sla').value=CAT_TARGETS.sla;
   document.getElementById('t-qual').value=CAT_TARGETS.qual;
@@ -650,6 +879,13 @@ function openSettings(){
   document.getElementById('t-sup').value=CAT_TARGETS.sup;
   document.getElementById('s-ncg').value=NCG_MEMBERS.join(', ');
   document.getElementById('s-newhire').value=NEW_HIRES.join(', ');
+  // reset upload state
+  document.getElementById('excel-filename').textContent='No file chosen';
+  document.getElementById('parse-status').textContent='';
+  document.getElementById('push-status').textContent='';
+  document.getElementById('push-btn').style.opacity='0.5';
+  document.getElementById('push-btn').style.pointerEvents='none';
+  parsedExcelData=null;
   document.getElementById('settings-overlay').classList.add('open');
 }
 function closeSettings(){document.getElementById('settings-overlay').classList.remove('open');}
@@ -676,17 +912,18 @@ const AP_DUR=10000;
 function wwToQ(ww){const n=parseInt(ww.replace('WW',''));if(n<=13)return 'Q1';if(n<=26)return 'Q2';if(n<=39)return 'Q3';return 'Q4';}
 
 /* Weeks visible under current quarter filter */
-function visibleWeeks(){return curQ==='all'?WEEKS:WEEKS.filter(ww=>wwToQ(ww)===curQ);}
+function visibleWeeks(){const w=liveWeeks();return curQ==='all'?w:w.filter(ww=>wwToQ(ww)===curQ);}
 
 /* Current WW scoped to visible weeks (last with data, else last visible) */
 function scopedCWW(){
   const vw=visibleWeeks();
-  const last=[...vw].reverse().find(ww=>EMPS.some(e=>e.scores[ww]!==null));
+  const emps=liveEmps();
+  const last=[...vw].reverse().find(ww=>emps.some(e=>e.scores[ww]!==null));
   return last||vw[vw.length-1];
 }
 
 function cls(v){if(v===null||v===undefined)return 'blank';if(v>=90)return 'high';if(v>=75)return 'mid';return 'low';}
-function filtered(){return curTeam==='all'?EMPS:EMPS.filter(e=>e.team===curTeam);}
+function filtered(){const e=liveEmps();return curTeam==='all'?e:e.filter(e=>e.team===curTeam);}
 function avcol(emp){return AVCOLS[EMPS.indexOf(emp)%AVCOLS.length];}
 function cs(v){return getComputedStyle(document.documentElement).getPropertyValue(v).trim();}
 
@@ -987,7 +1224,6 @@ function runAP(){
 
 /* INIT */
 (function(){
-  /* WW pill: show range of weeks that have any data, or just current if only one */
   const wwsWithData=WEEKS.filter(ww=>EMPS.some(e=>e.scores[ww]!==null));
   const pillText=wwsWithData.length>1
     ?`${wwsWithData[0]} – ${wwsWithData[wwsWithData.length-1]}`
@@ -995,6 +1231,8 @@ function runAP(){
   document.getElementById('hdr-ww').textContent=pillText;
 })();
 showScreen(0);
+// Try loading live data from GitHub (silently, won't break if offline)
+loadFromGitHub();
 </script>
 </body>
 </html>
