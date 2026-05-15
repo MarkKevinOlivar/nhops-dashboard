@@ -1,9 +1,66 @@
 {
   "weeks": [
-    "Rank"
+    "WW14",
+    "WW15",
+    "WW16",
+    "WW17",
+    "WW18",
+    "WW19",
+    "WW20",
+    "WW21",
+    "WW22",
+    "WW23",
+    "WW24",
+    "WW25",
+    "WW26"
   ],
-  "currentWW": "Rank",
+  "currentWW": "WW19",
   "employees": [
+    {
+      "code": "JOA",
+      "name": "James Avila",
+      "jg": "41-1",
+      "team": "IX & OHO",
+      "manager": "GMD",
+      "managerName": "Gemainne De Leon",
+      "scores": {
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": 93,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
+      },
+      "ranks": {
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": null,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
+      },
+      "cats": {
+        "prod": 22,
+        "sla": 30,
+        "qual": 20,
+        "att": 15,
+        "sup": 10
+      }
+    },
     {
       "code": "JSB",
       "name": "Jeffry Burgos",
@@ -12,10 +69,34 @@
       "manager": "GMD",
       "managerName": "Gemainne De Leon",
       "scores": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": 93,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "ranks": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": null,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "cats": {
         "prod": 25,
@@ -33,10 +114,34 @@
       "manager": "GMD",
       "managerName": "Gemainne De Leon",
       "scores": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": 89,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "ranks": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": null,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "cats": {
         "prod": 25,
@@ -54,10 +159,34 @@
       "manager": "GMD",
       "managerName": "Gemainne De Leon",
       "scores": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": 65,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "ranks": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": null,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "cats": {
         "prod": 10,
@@ -75,10 +204,34 @@
       "manager": "GMD",
       "managerName": "Gemainne De Leon",
       "scores": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": 63,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "ranks": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": null,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "cats": {
         "prod": 25,
@@ -96,10 +249,34 @@
       "manager": "GMD",
       "managerName": "Gemainne De Leon",
       "scores": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": 91,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "ranks": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": null,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "cats": {
         "prod": 21,
@@ -117,10 +294,34 @@
       "manager": "GMD",
       "managerName": "Gemainne De Leon",
       "scores": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": 86,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "ranks": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": null,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "cats": {
         "prod": 25,
@@ -138,10 +339,34 @@
       "manager": "GMD",
       "managerName": "Gemainne De Leon",
       "scores": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": 92,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "ranks": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": null,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "cats": {
         "prod": 15,
@@ -159,10 +384,34 @@
       "manager": "GMD",
       "managerName": "Gemainne De Leon",
       "scores": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": 91,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "ranks": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": null,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "cats": {
         "prod": 19,
@@ -180,10 +429,34 @@
       "manager": "MEF",
       "managerName": "Mary Ann Francisco",
       "scores": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": null,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "ranks": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": null,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "cats": {
         "prod": null,
@@ -201,10 +474,34 @@
       "manager": "MEF",
       "managerName": "Mary Ann Francisco",
       "scores": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": null,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "ranks": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": null,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "cats": {
         "prod": null,
@@ -222,10 +519,34 @@
       "manager": "MEF",
       "managerName": "Mary Ann Francisco",
       "scores": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": null,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "ranks": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": null,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "cats": {
         "prod": null,
@@ -243,10 +564,34 @@
       "manager": "MEF",
       "managerName": "Mary Ann Francisco",
       "scores": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": null,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "ranks": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": null,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "cats": {
         "prod": null,
@@ -264,10 +609,34 @@
       "manager": "MEF",
       "managerName": "Mary Ann Francisco",
       "scores": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": null,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "ranks": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": null,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "cats": {
         "prod": null,
@@ -285,10 +654,34 @@
       "manager": "MEF",
       "managerName": "Mary Ann Francisco",
       "scores": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": null,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "ranks": {
-        "Rank": null
+        "WW14": null,
+        "WW15": null,
+        "WW16": null,
+        "WW17": null,
+        "WW18": null,
+        "WW19": null,
+        "WW20": null,
+        "WW21": null,
+        "WW22": null,
+        "WW23": null,
+        "WW24": null,
+        "WW25": null,
+        "WW26": null
       },
       "cats": {
         "prod": null,
