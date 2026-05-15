@@ -1,218 +1,302 @@
 {
   "weeks": [
-    "Score"
+    "Rank"
   ],
-  "currentWW": "Score",
+  "currentWW": "Rank",
   "employees": [
     {
-      "code": "41-2",
-      "name": "41-2",
-      "jg": "",
-      "team": "GMD - Gemainne De Leon",
-      "manager": "JSB",
-      "managerName": "Jeffry Burgos",
+      "code": "JSB",
+      "name": "Jeffry Burgos",
+      "jg": "41-2",
+      "team": "IX & OHO",
+      "manager": "GMD",
+      "managerName": "Gemainne De Leon",
       "scores": {
-        "Score": null
+        "Rank": null
       },
       "ranks": {
-        "Score": null
+        "Rank": null
       },
-      "cats": {}
+      "cats": {
+        "prod": 25,
+        "sla": 28,
+        "qual": 20,
+        "att": 15,
+        "sup": 10
+      }
     },
     {
-      "code": "41-2",
-      "name": "41-2",
-      "jg": "",
-      "team": "GMD - Gemainne De Leon",
-      "manager": "CZH",
-      "managerName": "Christine Hernandez",
+      "code": "CZH",
+      "name": "Christine Hernandez",
+      "jg": "41-2",
+      "team": "IX & OHO",
+      "manager": "GMD",
+      "managerName": "Gemainne De Leon",
       "scores": {
-        "Score": null
+        "Rank": null
       },
       "ranks": {
-        "Score": null
+        "Rank": null
       },
-      "cats": {}
+      "cats": {
+        "prod": 25,
+        "sla": 25,
+        "qual": 20,
+        "att": 9,
+        "sup": 10
+      }
     },
     {
-      "code": "42-1",
-      "name": "42-1",
-      "jg": "",
-      "team": "GMD - Gemainne De Leon",
-      "manager": "GLI",
-      "managerName": "Godofredo Intia Jr.",
+      "code": "GLI",
+      "name": "Godofredo Intia Jr.",
+      "jg": "42-1",
+      "team": "IX & OHO",
+      "manager": "GMD",
+      "managerName": "Gemainne De Leon",
       "scores": {
-        "Score": null
+        "Rank": null
       },
       "ranks": {
-        "Score": null
+        "Rank": null
       },
-      "cats": {}
+      "cats": {
+        "prod": 10,
+        "sla": 20,
+        "qual": 10,
+        "att": 15,
+        "sup": 10
+      }
     },
     {
-      "code": "40",
-      "name": "40",
-      "jg": "",
-      "team": "GMD - Gemainne De Leon",
-      "manager": "GSD",
-      "managerName": "Gloddie Mae Due",
+      "code": "GSD",
+      "name": "Gloddie Mae Due",
+      "jg": "40",
+      "team": "IX & OHO",
+      "manager": "GMD",
+      "managerName": "Gemainne De Leon",
       "scores": {
-        "Score": null
+        "Rank": null
       },
       "ranks": {
-        "Score": null
+        "Rank": null
       },
-      "cats": {}
+      "cats": {
+        "prod": 25,
+        "sla": 8,
+        "qual": 20,
+        "att": 15,
+        "sup": null
+      }
     },
     {
-      "code": "43-1",
-      "name": "43-1",
-      "jg": "",
-      "team": "GMD - Gemainne De Leon",
-      "manager": "MOM",
-      "managerName": "Ma. Aurora Magnaye",
+      "code": "MOM",
+      "name": "Ma. Aurora Magnaye",
+      "jg": "43-1",
+      "team": "IX & OHO",
+      "manager": "GMD",
+      "managerName": "Gemainne De Leon",
       "scores": {
-        "Score": null
+        "Rank": null
       },
       "ranks": {
-        "Score": null
+        "Rank": null
       },
-      "cats": {}
+      "cats": {
+        "prod": 21,
+        "sla": 15,
+        "qual": 20,
+        "att": 15,
+        "sup": 20
+      }
     },
     {
-      "code": "41-1",
-      "name": "41-1",
-      "jg": "",
-      "team": "GMD - Gemainne De Leon",
-      "manager": "KOM",
-      "managerName": "Kith Martinez",
+      "code": "KOM",
+      "name": "Kith Martinez",
+      "jg": "41-1",
+      "team": "IX & OHO",
+      "manager": "GMD",
+      "managerName": "Gemainne De Leon",
       "scores": {
-        "Score": null
+        "Rank": null
       },
       "ranks": {
-        "Score": null
+        "Rank": null
       },
-      "cats": {}
+      "cats": {
+        "prod": 25,
+        "sla": 26,
+        "qual": 20,
+        "att": 15,
+        "sup": 5
+      }
     },
     {
-      "code": "42-1",
-      "name": "42-1",
-      "jg": "",
-      "team": "GMD - Gemainne De Leon",
-      "manager": "RET",
-      "managerName": "Rosanna Tamonang",
+      "code": "RET",
+      "name": "Rosanna Tamonang",
+      "jg": "42-1",
+      "team": "IX & OHO",
+      "manager": "GMD",
+      "managerName": "Gemainne De Leon",
       "scores": {
-        "Score": null
+        "Rank": null
       },
       "ranks": {
-        "Score": null
+        "Rank": null
       },
-      "cats": {}
+      "cats": {
+        "prod": 15,
+        "sla": 25,
+        "qual": 10,
+        "att": 12,
+        "sup": 30
+      }
     },
     {
-      "code": "41-1",
-      "name": "41-1",
-      "jg": "",
-      "team": "GMD - Gemainne De Leon",
-      "manager": "KBV",
-      "managerName": "Kelsey Shane Valencia",
+      "code": "KBV",
+      "name": "Kelsey Shane Valencia",
+      "jg": "41-1",
+      "team": "IX & OHO",
+      "manager": "GMD",
+      "managerName": "Gemainne De Leon",
       "scores": {
-        "Score": null
+        "Rank": null
       },
       "ranks": {
-        "Score": null
+        "Rank": null
       },
-      "cats": {}
+      "cats": {
+        "prod": 19,
+        "sla": 30,
+        "qual": 20,
+        "att": 15,
+        "sup": 10
+      }
     },
     {
-      "code": "43-1",
-      "name": "43-1",
-      "jg": "",
-      "team": "MEF - Mary Ann Francisco",
-      "manager": "JJB",
-      "managerName": "Joanne Baccay",
+      "code": "JJB",
+      "name": "Joanne Baccay",
+      "jg": "43-1",
+      "team": "PC & SAC",
+      "manager": "MEF",
+      "managerName": "Mary Ann Francisco",
       "scores": {
-        "Score": null
+        "Rank": null
       },
       "ranks": {
-        "Score": null
+        "Rank": null
       },
-      "cats": {}
+      "cats": {
+        "prod": null,
+        "sla": null,
+        "qual": null,
+        "att": null,
+        "sup": null
+      }
     },
     {
-      "code": "41-1",
-      "name": "41-1",
-      "jg": "",
-      "team": "MEF - Mary Ann Francisco",
-      "manager": "CBH",
-      "managerName": "Cinderella Hernandez",
+      "code": "CBH",
+      "name": "Cinderella Hernandez",
+      "jg": "41-1",
+      "team": "PC & SAC",
+      "manager": "MEF",
+      "managerName": "Mary Ann Francisco",
       "scores": {
-        "Score": null
+        "Rank": null
       },
       "ranks": {
-        "Score": null
+        "Rank": null
       },
-      "cats": {}
+      "cats": {
+        "prod": null,
+        "sla": null,
+        "qual": null,
+        "att": null,
+        "sup": null
+      }
     },
     {
-      "code": "42-1",
-      "name": "42-1",
-      "jg": "",
-      "team": "MEF - Mary Ann Francisco",
-      "manager": "PPV",
-      "managerName": "Perfecto Viray",
+      "code": "PPV",
+      "name": "Perfecto Viray",
+      "jg": "42-1",
+      "team": "PC & SAC",
+      "manager": "MEF",
+      "managerName": "Mary Ann Francisco",
       "scores": {
-        "Score": null
+        "Rank": null
       },
       "ranks": {
-        "Score": null
+        "Rank": null
       },
-      "cats": {}
+      "cats": {
+        "prod": null,
+        "sla": null,
+        "qual": null,
+        "att": null,
+        "sup": null
+      }
     },
     {
-      "code": "41-1",
-      "name": "41-1",
-      "jg": "",
-      "team": "MEF - Mary Ann Francisco",
-      "manager": "AUF",
-      "managerName": "Angelica May Franco",
+      "code": "AUF",
+      "name": "Angelica May Franco",
+      "jg": "41-1",
+      "team": "PC & SAC",
+      "manager": "MEF",
+      "managerName": "Mary Ann Francisco",
       "scores": {
-        "Score": null
+        "Rank": null
       },
       "ranks": {
-        "Score": null
+        "Rank": null
       },
-      "cats": {}
+      "cats": {
+        "prod": null,
+        "sla": null,
+        "qual": null,
+        "att": null,
+        "sup": null
+      }
     },
     {
-      "code": "41-1",
-      "name": "41-1",
-      "jg": "",
-      "team": "MEF - Mary Ann Francisco",
-      "manager": "KPC",
-      "managerName": "Kevin Carait",
+      "code": "KPC",
+      "name": "Kevin Carait",
+      "jg": "41-1",
+      "team": "PC & SAC",
+      "manager": "MEF",
+      "managerName": "Mary Ann Francisco",
       "scores": {
-        "Score": null
+        "Rank": null
       },
       "ranks": {
-        "Score": null
+        "Rank": null
       },
-      "cats": {}
+      "cats": {
+        "prod": null,
+        "sla": null,
+        "qual": null,
+        "att": null,
+        "sup": null
+      }
     },
     {
-      "code": "41-1",
-      "name": "41-1",
-      "jg": "",
-      "team": "MEF - Mary Ann Francisco",
-      "manager": "KSB",
-      "managerName": "Kent Balangue",
+      "code": "KSB",
+      "name": "Kent Balangue",
+      "jg": "41-1",
+      "team": "PC & SAC",
+      "manager": "MEF",
+      "managerName": "Mary Ann Francisco",
       "scores": {
-        "Score": null
+        "Rank": null
       },
       "ranks": {
-        "Score": null
+        "Rank": null
       },
-      "cats": {}
+      "cats": {
+        "prod": null,
+        "sla": null,
+        "qual": null,
+        "att": null,
+        "sup": null
+      }
     }
   ]
 }
