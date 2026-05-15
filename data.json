@@ -1,0 +1,218 @@
+{
+  "weeks": [
+    "Score"
+  ],
+  "currentWW": "Score",
+  "employees": [
+    {
+      "code": "41-2",
+      "name": "41-2",
+      "jg": "",
+      "team": "GMD - Gemainne De Leon",
+      "manager": "JSB",
+      "managerName": "Jeffry Burgos",
+      "scores": {
+        "Score": null
+      },
+      "ranks": {
+        "Score": null
+      },
+      "cats": {}
+    },
+    {
+      "code": "41-2",
+      "name": "41-2",
+      "jg": "",
+      "team": "GMD - Gemainne De Leon",
+      "manager": "CZH",
+      "managerName": "Christine Hernandez",
+      "scores": {
+        "Score": null
+      },
+      "ranks": {
+        "Score": null
+      },
+      "cats": {}
+    },
+    {
+      "code": "42-1",
+      "name": "42-1",
+      "jg": "",
+      "team": "GMD - Gemainne De Leon",
+      "manager": "GLI",
+      "managerName": "Godofredo Intia Jr.",
+      "scores": {
+        "Score": null
+      },
+      "ranks": {
+        "Score": null
+      },
+      "cats": {}
+    },
+    {
+      "code": "40",
+      "name": "40",
+      "jg": "",
+      "team": "GMD - Gemainne De Leon",
+      "manager": "GSD",
+      "managerName": "Gloddie Mae Due",
+      "scores": {
+        "Score": null
+      },
+      "ranks": {
+        "Score": null
+      },
+      "cats": {}
+    },
+    {
+      "code": "43-1",
+      "name": "43-1",
+      "jg": "",
+      "team": "GMD - Gemainne De Leon",
+      "manager": "MOM",
+      "managerName": "Ma. Aurora Magnaye",
+      "scores": {
+        "Score": null
+      },
+      "ranks": {
+        "Score": null
+      },
+      "cats": {}
+    },
+    {
+      "code": "41-1",
+      "name": "41-1",
+      "jg": "",
+      "team": "GMD - Gemainne De Leon",
+      "manager": "KOM",
+      "managerName": "Kith Martinez",
+      "scores": {
+        "Score": null
+      },
+      "ranks": {
+        "Score": null
+      },
+      "cats": {}
+    },
+    {
+      "code": "42-1",
+      "name": "42-1",
+      "jg": "",
+      "team": "GMD - Gemainne De Leon",
+      "manager": "RET",
+      "managerName": "Rosanna Tamonang",
+      "scores": {
+        "Score": null
+      },
+      "ranks": {
+        "Score": null
+      },
+      "cats": {}
+    },
+    {
+      "code": "41-1",
+      "name": "41-1",
+      "jg": "",
+      "team": "GMD - Gemainne De Leon",
+      "manager": "KBV",
+      "managerName": "Kelsey Shane Valencia",
+      "scores": {
+        "Score": null
+      },
+      "ranks": {
+        "Score": null
+      },
+      "cats": {}
+    },
+    {
+      "code": "43-1",
+      "name": "43-1",
+      "jg": "",
+      "team": "MEF - Mary Ann Francisco",
+      "manager": "JJB",
+      "managerName": "Joanne Baccay",
+      "scores": {
+        "Score": null
+      },
+      "ranks": {
+        "Score": null
+      },
+      "cats": {}
+    },
+    {
+      "code": "41-1",
+      "name": "41-1",
+      "jg": "",
+      "team": "MEF - Mary Ann Francisco",
+      "manager": "CBH",
+      "managerName": "Cinderella Hernandez",
+      "scores": {
+        "Score": null
+      },
+      "ranks": {
+        "Score": null
+      },
+      "cats": {}
+    },
+    {
+      "code": "42-1",
+      "name": "42-1",
+      "jg": "",
+      "team": "MEF - Mary Ann Francisco",
+      "manager": "PPV",
+      "managerName": "Perfecto Viray",
+      "scores": {
+        "Score": null
+      },
+      "ranks": {
+        "Score": null
+      },
+      "cats": {}
+    },
+    {
+      "code": "41-1",
+      "name": "41-1",
+      "jg": "",
+      "team": "MEF - Mary Ann Francisco",
+      "manager": "AUF",
+      "managerName": "Angelica May Franco",
+      "scores": {
+        "Score": null
+      },
+      "ranks": {
+        "Score": null
+      },
+      "cats": {}
+    },
+    {
+      "code": "41-1",
+      "name": "41-1",
+      "jg": "",
+      "team": "MEF - Mary Ann Francisco",
+      "manager": "KPC",
+      "managerName": "Kevin Carait",
+      "scores": {
+        "Score": null
+      },
+      "ranks": {
+        "Score": null
+      },
+      "cats": {}
+    },
+    {
+      "code": "41-1",
+      "name": "41-1",
+      "jg": "",
+      "team": "MEF - Mary Ann Francisco",
+      "manager": "KSB",
+      "managerName": "Kent Balangue",
+      "scores": {
+        "Score": null
+      },
+      "ranks": {
+        "Score": null
+      },
+      "cats": {}
+    }
+  ]
+}
