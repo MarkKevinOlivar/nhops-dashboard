@@ -1588,6 +1588,8 @@ function onExcelSelected(evt){
     try{
       const wb=XLSX.read(e.target.result,{type:'array'});
       parsedExcelData=parseWorkbook(wb);
+      /* Debug: log to console so you can inspect with F12 */
+      console.log('Parsed data:', JSON.stringify(parsedExcelData, null, 2));
       document.getElementById('parse-status').style.color='var(--green)';
       document.getElementById('parse-status').textContent=
         `✓ Parsed ${parsedExcelData.employees.length} employees · Current WW: ${parsedExcelData.currentWW}`;
@@ -1639,9 +1641,13 @@ function parseWorkbook(wb){
     const managerName=mgrDash>=0?mgrRaw.slice(mgrDash+3).trim():'';
     const scores={},ranks={};
     weeks.forEach(ww=>{
-      const s=row[wwMap[ww].scoreCol], r=row[wwMap[ww].rankCol];
-      scores[ww]=(s==null||s===''||isNaN(parseFloat(s)))?null:Math.round(parseFloat(s));
-      ranks[ww]=(r==null||r==='')?null:String(r);
+      /* Use != null to catch both null AND undefined (sparse array rows) */
+      const sc=wwMap[ww].scoreCol, rc=wwMap[ww].rankCol;
+      const s=sc<row.length?row[sc]:undefined;
+      const r=rc<row.length?row[rc]:undefined;
+      const sNum=parseFloat(s);
+      scores[ww]=(s!=null&&s!==''&&!isNaN(sNum))?Math.round(sNum):null;
+      ranks[ww]=(r!=null&&r!=='')?String(r):null;
     });
     employees.push({
       code,name,
