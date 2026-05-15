@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0050)https://markkevinolivar.github.io/nhops-dashboard/ -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NH Ops Dashboard — Release 1</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<link href="./NH Ops Dashboard — Release 1_files/css2" rel="stylesheet">
+<script src="./NH Ops Dashboard — Release 1_files/chart.umd.min.js.download"></script>
+<script src="./NH Ops Dashboard — Release 1_files/xlsx.full.min.js.download"></script>
 <style>
 /* ── ROOT: matches Design Andon Board exactly ── */
 :root {
@@ -444,21 +444,21 @@ body.light-mode .btn-icon:hover{color:var(--accent);border-color:var(--accent);}
 body.light-mode .ww-pill{color:var(--accent);}
 </style>
 </head>
-<body>
+<body class="">
 
 <div id="header">
   <div class="hdr-left">
     <!-- SunPower wordmark SVG — matches Design Andon Board -->
     <svg height="22" viewBox="0 0 220 40" xmlns="http://www.w3.org/2000/svg" aria-label="SunPower">
-      <text font-family="'Bebas Neue',sans-serif" font-size="36" fill="#eef0f4" y="32" letter-spacing="1">SUN</text>
+      <text font-family="&#39;Bebas Neue&#39;,sans-serif" font-size="36" fill="#eef0f4" y="32" letter-spacing="1">SUN</text>
       <!-- The "O" in POWER rendered as an orange circle/sun mark -->
-      <text font-family="'Bebas Neue',sans-serif" font-size="36" fill="#eef0f4" y="32" x="72" letter-spacing="1">P</text>
-      <circle cx="109" cy="18" r="11" fill="none" stroke="#F7941D" stroke-width="3"/>
-      <circle cx="109" cy="18" r="4" fill="#F7941D"/>
-      <text font-family="'Bebas Neue',sans-serif" font-size="36" fill="#eef0f4" y="32" x="122" letter-spacing="1">WER</text>
+      <text font-family="&#39;Bebas Neue&#39;,sans-serif" font-size="36" fill="#eef0f4" y="32" x="72" letter-spacing="1">P</text>
+      <circle cx="109" cy="18" r="11" fill="none" stroke="#F7941D" stroke-width="3"></circle>
+      <circle cx="109" cy="18" r="4" fill="#F7941D"></circle>
+      <text font-family="&#39;Bebas Neue&#39;,sans-serif" font-size="36" fill="#eef0f4" y="32" x="122" letter-spacing="1">WER</text>
     </svg>
     <div class="board-title">NH OPS <span>DASHBOARD</span></div>
-    <div class="ww-pill" id="hdr-ww">—</div>
+    <div class="ww-pill" id="hdr-ww">Score</div>
   </div>
   <div class="hdr-center">
     <button class="nav-btn active" onclick="showScreen(0)">S1 · Scorecard</button>
@@ -466,17 +466,17 @@ body.light-mode .ww-pill{color:var(--accent);}
   </div>
   <div class="hdr-right">
     <div class="team-btns" id="team-btns">
-      <button class="slicer-btn active" onclick="setTeam('all')">All</button>
-      <button class="slicer-btn" onclick="setTeam('IX & OHO')">IX &amp; OHO</button>
-      <button class="slicer-btn" onclick="setTeam('PC & SAC')">PC &amp; SAC</button>
+      <button class="slicer-btn active" onclick="setTeam(&#39;all&#39;)">All</button>
+      <button class="slicer-btn" onclick="setTeam(&#39;IX &amp; OHO&#39;)">IX &amp; OHO</button>
+      <button class="slicer-btn" onclick="setTeam(&#39;PC &amp; SAC&#39;)">PC &amp; SAC</button>
     </div>
     <div style="width:1px;height:18px;background:var(--border2);margin:0 2px;"></div>
     <div class="team-btns" id="q-btns">
-      <button class="slicer-btn active" onclick="setQ('all')">All Qtrs</button>
-      <button class="slicer-btn" onclick="setQ('Q1')">Q1</button>
-      <button class="slicer-btn" onclick="setQ('Q2')">Q2</button>
-      <button class="slicer-btn" onclick="setQ('Q3')">Q3</button>
-      <button class="slicer-btn" onclick="setQ('Q4')">Q4</button>
+      <button class="slicer-btn active" onclick="setQ(&#39;all&#39;)">All Qtrs</button>
+      <button class="slicer-btn" onclick="setQ(&#39;Q1&#39;)">Q1</button>
+      <button class="slicer-btn" onclick="setQ(&#39;Q2&#39;)">Q2</button>
+      <button class="slicer-btn" onclick="setQ(&#39;Q3&#39;)">Q3</button>
+      <button class="slicer-btn" onclick="setQ(&#39;Q4&#39;)">Q4</button>
     </div>
     <button class="auto-btn" id="ap-btn" onclick="toggleAP()">▶ Auto</button>
     <button class="btn-icon" onclick="toggleTheme()" id="theme-btn" title="Toggle theme">☀</button>
@@ -486,7 +486,693 @@ body.light-mode .ww-pill{color:var(--accent);}
 <div id="main">
   <div class="screen active" id="s0">
     <div class="sec-hdr"><div class="sec-title">Individual Scorecard</div><div class="sec-sub">Ranked by score — current work week</div><div class="sec-rule"></div></div>
-    <div class="sc-grid" id="sc-grid"></div>
+    <div class="sc-grid" id="sc-grid"><div class="emp-card">
+      <div class="card-top">
+        <div class="card-left">
+          <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:3px;">
+            <div class="d-name">41-2</div>
+            
+            
+          </div>
+          <div class="d-fullname">41-2</div>
+          <div class="d-meta">GMD - Gemainne De Leon</div>
+        </div>
+        <div class="card-right">
+          <div class="score-badge">
+            <div class="score-num c-blank">—</div>
+            <div class="score-unit">%</div>
+          </div>
+          <div class="rank-tag none">NO DATA</div>
+        </div>
+      </div>
+      <div class="score-bar-strip">
+        <div class="sbar-label">SCORE</div>
+        <div class="sbar-bg"><div class="sbar-fill c-blank" style="width:0%"></div></div>
+        <div class="sbar-val c-blank">N/A</div>
+      </div>
+      <div class="cat-cells"><div class="cat-cell cc-prod">
+        <div class="cc-name">PROD</div>
+        <div class="cc-val" style="color:#4FC3F7;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.30</div>
+      </div><div class="cat-cell cc-sla">
+        <div class="cc-name">SLA</div>
+        <div class="cc-val" style="color:#69F0AE;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-qual">
+        <div class="cc-name">QUAL</div>
+        <div class="cc-val" style="color:#CE93D8;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-att">
+        <div class="cc-name">ATT</div>
+        <div class="cc-val" style="color:#FFD54F;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div><div class="cat-cell cc-sup">
+        <div class="cc-name">SUP</div>
+        <div class="cc-val" style="color:#FFB74D;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div></div>
+      <div class="ww-strip">
+        <div class="ww-strip-label">Score</div>
+        <div class="wdot cur" title="Score: N/A">Score</div>
+      </div>
+    </div><div class="emp-card">
+      <div class="card-top">
+        <div class="card-left">
+          <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:3px;">
+            <div class="d-name">41-2</div>
+            
+            
+          </div>
+          <div class="d-fullname">41-2</div>
+          <div class="d-meta">GMD - Gemainne De Leon</div>
+        </div>
+        <div class="card-right">
+          <div class="score-badge">
+            <div class="score-num c-blank">—</div>
+            <div class="score-unit">%</div>
+          </div>
+          <div class="rank-tag none">NO DATA</div>
+        </div>
+      </div>
+      <div class="score-bar-strip">
+        <div class="sbar-label">SCORE</div>
+        <div class="sbar-bg"><div class="sbar-fill c-blank" style="width:0%"></div></div>
+        <div class="sbar-val c-blank">N/A</div>
+      </div>
+      <div class="cat-cells"><div class="cat-cell cc-prod">
+        <div class="cc-name">PROD</div>
+        <div class="cc-val" style="color:#4FC3F7;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.30</div>
+      </div><div class="cat-cell cc-sla">
+        <div class="cc-name">SLA</div>
+        <div class="cc-val" style="color:#69F0AE;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-qual">
+        <div class="cc-name">QUAL</div>
+        <div class="cc-val" style="color:#CE93D8;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-att">
+        <div class="cc-name">ATT</div>
+        <div class="cc-val" style="color:#FFD54F;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div><div class="cat-cell cc-sup">
+        <div class="cc-name">SUP</div>
+        <div class="cc-val" style="color:#FFB74D;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div></div>
+      <div class="ww-strip">
+        <div class="ww-strip-label">Score</div>
+        <div class="wdot cur" title="Score: N/A">Score</div>
+      </div>
+    </div><div class="emp-card">
+      <div class="card-top">
+        <div class="card-left">
+          <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:3px;">
+            <div class="d-name">42-1</div>
+            
+            
+          </div>
+          <div class="d-fullname">42-1</div>
+          <div class="d-meta">GMD - Gemainne De Leon</div>
+        </div>
+        <div class="card-right">
+          <div class="score-badge">
+            <div class="score-num c-blank">—</div>
+            <div class="score-unit">%</div>
+          </div>
+          <div class="rank-tag none">NO DATA</div>
+        </div>
+      </div>
+      <div class="score-bar-strip">
+        <div class="sbar-label">SCORE</div>
+        <div class="sbar-bg"><div class="sbar-fill c-blank" style="width:0%"></div></div>
+        <div class="sbar-val c-blank">N/A</div>
+      </div>
+      <div class="cat-cells"><div class="cat-cell cc-prod">
+        <div class="cc-name">PROD</div>
+        <div class="cc-val" style="color:#4FC3F7;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.30</div>
+      </div><div class="cat-cell cc-sla">
+        <div class="cc-name">SLA</div>
+        <div class="cc-val" style="color:#69F0AE;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-qual">
+        <div class="cc-name">QUAL</div>
+        <div class="cc-val" style="color:#CE93D8;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-att">
+        <div class="cc-name">ATT</div>
+        <div class="cc-val" style="color:#FFD54F;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div><div class="cat-cell cc-sup">
+        <div class="cc-name">SUP</div>
+        <div class="cc-val" style="color:#FFB74D;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div></div>
+      <div class="ww-strip">
+        <div class="ww-strip-label">Score</div>
+        <div class="wdot cur" title="Score: N/A">Score</div>
+      </div>
+    </div><div class="emp-card">
+      <div class="card-top">
+        <div class="card-left">
+          <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:3px;">
+            <div class="d-name">40</div>
+            
+            
+          </div>
+          <div class="d-fullname">40</div>
+          <div class="d-meta">GMD - Gemainne De Leon</div>
+        </div>
+        <div class="card-right">
+          <div class="score-badge">
+            <div class="score-num c-blank">—</div>
+            <div class="score-unit">%</div>
+          </div>
+          <div class="rank-tag none">NO DATA</div>
+        </div>
+      </div>
+      <div class="score-bar-strip">
+        <div class="sbar-label">SCORE</div>
+        <div class="sbar-bg"><div class="sbar-fill c-blank" style="width:0%"></div></div>
+        <div class="sbar-val c-blank">N/A</div>
+      </div>
+      <div class="cat-cells"><div class="cat-cell cc-prod">
+        <div class="cc-name">PROD</div>
+        <div class="cc-val" style="color:#4FC3F7;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.30</div>
+      </div><div class="cat-cell cc-sla">
+        <div class="cc-name">SLA</div>
+        <div class="cc-val" style="color:#69F0AE;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-qual">
+        <div class="cc-name">QUAL</div>
+        <div class="cc-val" style="color:#CE93D8;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-att">
+        <div class="cc-name">ATT</div>
+        <div class="cc-val" style="color:#FFD54F;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div><div class="cat-cell cc-sup">
+        <div class="cc-name">SUP</div>
+        <div class="cc-val" style="color:#FFB74D;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div></div>
+      <div class="ww-strip">
+        <div class="ww-strip-label">Score</div>
+        <div class="wdot cur" title="Score: N/A">Score</div>
+      </div>
+    </div><div class="emp-card">
+      <div class="card-top">
+        <div class="card-left">
+          <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:3px;">
+            <div class="d-name">43-1</div>
+            
+            
+          </div>
+          <div class="d-fullname">43-1</div>
+          <div class="d-meta">GMD - Gemainne De Leon</div>
+        </div>
+        <div class="card-right">
+          <div class="score-badge">
+            <div class="score-num c-blank">—</div>
+            <div class="score-unit">%</div>
+          </div>
+          <div class="rank-tag none">NO DATA</div>
+        </div>
+      </div>
+      <div class="score-bar-strip">
+        <div class="sbar-label">SCORE</div>
+        <div class="sbar-bg"><div class="sbar-fill c-blank" style="width:0%"></div></div>
+        <div class="sbar-val c-blank">N/A</div>
+      </div>
+      <div class="cat-cells"><div class="cat-cell cc-prod">
+        <div class="cc-name">PROD</div>
+        <div class="cc-val" style="color:#4FC3F7;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.30</div>
+      </div><div class="cat-cell cc-sla">
+        <div class="cc-name">SLA</div>
+        <div class="cc-val" style="color:#69F0AE;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-qual">
+        <div class="cc-name">QUAL</div>
+        <div class="cc-val" style="color:#CE93D8;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-att">
+        <div class="cc-name">ATT</div>
+        <div class="cc-val" style="color:#FFD54F;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div><div class="cat-cell cc-sup">
+        <div class="cc-name">SUP</div>
+        <div class="cc-val" style="color:#FFB74D;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div></div>
+      <div class="ww-strip">
+        <div class="ww-strip-label">Score</div>
+        <div class="wdot cur" title="Score: N/A">Score</div>
+      </div>
+    </div><div class="emp-card">
+      <div class="card-top">
+        <div class="card-left">
+          <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:3px;">
+            <div class="d-name">41-1</div>
+            
+            
+          </div>
+          <div class="d-fullname">41-1</div>
+          <div class="d-meta">GMD - Gemainne De Leon</div>
+        </div>
+        <div class="card-right">
+          <div class="score-badge">
+            <div class="score-num c-blank">—</div>
+            <div class="score-unit">%</div>
+          </div>
+          <div class="rank-tag none">NO DATA</div>
+        </div>
+      </div>
+      <div class="score-bar-strip">
+        <div class="sbar-label">SCORE</div>
+        <div class="sbar-bg"><div class="sbar-fill c-blank" style="width:0%"></div></div>
+        <div class="sbar-val c-blank">N/A</div>
+      </div>
+      <div class="cat-cells"><div class="cat-cell cc-prod">
+        <div class="cc-name">PROD</div>
+        <div class="cc-val" style="color:#4FC3F7;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.30</div>
+      </div><div class="cat-cell cc-sla">
+        <div class="cc-name">SLA</div>
+        <div class="cc-val" style="color:#69F0AE;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-qual">
+        <div class="cc-name">QUAL</div>
+        <div class="cc-val" style="color:#CE93D8;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-att">
+        <div class="cc-name">ATT</div>
+        <div class="cc-val" style="color:#FFD54F;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div><div class="cat-cell cc-sup">
+        <div class="cc-name">SUP</div>
+        <div class="cc-val" style="color:#FFB74D;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div></div>
+      <div class="ww-strip">
+        <div class="ww-strip-label">Score</div>
+        <div class="wdot cur" title="Score: N/A">Score</div>
+      </div>
+    </div><div class="emp-card">
+      <div class="card-top">
+        <div class="card-left">
+          <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:3px;">
+            <div class="d-name">42-1</div>
+            
+            
+          </div>
+          <div class="d-fullname">42-1</div>
+          <div class="d-meta">GMD - Gemainne De Leon</div>
+        </div>
+        <div class="card-right">
+          <div class="score-badge">
+            <div class="score-num c-blank">—</div>
+            <div class="score-unit">%</div>
+          </div>
+          <div class="rank-tag none">NO DATA</div>
+        </div>
+      </div>
+      <div class="score-bar-strip">
+        <div class="sbar-label">SCORE</div>
+        <div class="sbar-bg"><div class="sbar-fill c-blank" style="width:0%"></div></div>
+        <div class="sbar-val c-blank">N/A</div>
+      </div>
+      <div class="cat-cells"><div class="cat-cell cc-prod">
+        <div class="cc-name">PROD</div>
+        <div class="cc-val" style="color:#4FC3F7;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.30</div>
+      </div><div class="cat-cell cc-sla">
+        <div class="cc-name">SLA</div>
+        <div class="cc-val" style="color:#69F0AE;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-qual">
+        <div class="cc-name">QUAL</div>
+        <div class="cc-val" style="color:#CE93D8;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-att">
+        <div class="cc-name">ATT</div>
+        <div class="cc-val" style="color:#FFD54F;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div><div class="cat-cell cc-sup">
+        <div class="cc-name">SUP</div>
+        <div class="cc-val" style="color:#FFB74D;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div></div>
+      <div class="ww-strip">
+        <div class="ww-strip-label">Score</div>
+        <div class="wdot cur" title="Score: N/A">Score</div>
+      </div>
+    </div><div class="emp-card">
+      <div class="card-top">
+        <div class="card-left">
+          <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:3px;">
+            <div class="d-name">41-1</div>
+            
+            
+          </div>
+          <div class="d-fullname">41-1</div>
+          <div class="d-meta">GMD - Gemainne De Leon</div>
+        </div>
+        <div class="card-right">
+          <div class="score-badge">
+            <div class="score-num c-blank">—</div>
+            <div class="score-unit">%</div>
+          </div>
+          <div class="rank-tag none">NO DATA</div>
+        </div>
+      </div>
+      <div class="score-bar-strip">
+        <div class="sbar-label">SCORE</div>
+        <div class="sbar-bg"><div class="sbar-fill c-blank" style="width:0%"></div></div>
+        <div class="sbar-val c-blank">N/A</div>
+      </div>
+      <div class="cat-cells"><div class="cat-cell cc-prod">
+        <div class="cc-name">PROD</div>
+        <div class="cc-val" style="color:#4FC3F7;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.30</div>
+      </div><div class="cat-cell cc-sla">
+        <div class="cc-name">SLA</div>
+        <div class="cc-val" style="color:#69F0AE;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-qual">
+        <div class="cc-name">QUAL</div>
+        <div class="cc-val" style="color:#CE93D8;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-att">
+        <div class="cc-name">ATT</div>
+        <div class="cc-val" style="color:#FFD54F;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div><div class="cat-cell cc-sup">
+        <div class="cc-name">SUP</div>
+        <div class="cc-val" style="color:#FFB74D;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div></div>
+      <div class="ww-strip">
+        <div class="ww-strip-label">Score</div>
+        <div class="wdot cur" title="Score: N/A">Score</div>
+      </div>
+    </div><div class="emp-card">
+      <div class="card-top">
+        <div class="card-left">
+          <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:3px;">
+            <div class="d-name">43-1</div>
+            
+            
+          </div>
+          <div class="d-fullname">43-1</div>
+          <div class="d-meta">MEF - Mary Ann Francisco</div>
+        </div>
+        <div class="card-right">
+          <div class="score-badge">
+            <div class="score-num c-blank">—</div>
+            <div class="score-unit">%</div>
+          </div>
+          <div class="rank-tag none">NO DATA</div>
+        </div>
+      </div>
+      <div class="score-bar-strip">
+        <div class="sbar-label">SCORE</div>
+        <div class="sbar-bg"><div class="sbar-fill c-blank" style="width:0%"></div></div>
+        <div class="sbar-val c-blank">N/A</div>
+      </div>
+      <div class="cat-cells"><div class="cat-cell cc-prod">
+        <div class="cc-name">PROD</div>
+        <div class="cc-val" style="color:#4FC3F7;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.30</div>
+      </div><div class="cat-cell cc-sla">
+        <div class="cc-name">SLA</div>
+        <div class="cc-val" style="color:#69F0AE;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-qual">
+        <div class="cc-name">QUAL</div>
+        <div class="cc-val" style="color:#CE93D8;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-att">
+        <div class="cc-name">ATT</div>
+        <div class="cc-val" style="color:#FFD54F;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div><div class="cat-cell cc-sup">
+        <div class="cc-name">SUP</div>
+        <div class="cc-val" style="color:#FFB74D;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div></div>
+      <div class="ww-strip">
+        <div class="ww-strip-label">Score</div>
+        <div class="wdot cur" title="Score: N/A">Score</div>
+      </div>
+    </div><div class="emp-card">
+      <div class="card-top">
+        <div class="card-left">
+          <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:3px;">
+            <div class="d-name">41-1</div>
+            
+            
+          </div>
+          <div class="d-fullname">41-1</div>
+          <div class="d-meta">MEF - Mary Ann Francisco</div>
+        </div>
+        <div class="card-right">
+          <div class="score-badge">
+            <div class="score-num c-blank">—</div>
+            <div class="score-unit">%</div>
+          </div>
+          <div class="rank-tag none">NO DATA</div>
+        </div>
+      </div>
+      <div class="score-bar-strip">
+        <div class="sbar-label">SCORE</div>
+        <div class="sbar-bg"><div class="sbar-fill c-blank" style="width:0%"></div></div>
+        <div class="sbar-val c-blank">N/A</div>
+      </div>
+      <div class="cat-cells"><div class="cat-cell cc-prod">
+        <div class="cc-name">PROD</div>
+        <div class="cc-val" style="color:#4FC3F7;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.30</div>
+      </div><div class="cat-cell cc-sla">
+        <div class="cc-name">SLA</div>
+        <div class="cc-val" style="color:#69F0AE;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-qual">
+        <div class="cc-name">QUAL</div>
+        <div class="cc-val" style="color:#CE93D8;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-att">
+        <div class="cc-name">ATT</div>
+        <div class="cc-val" style="color:#FFD54F;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div><div class="cat-cell cc-sup">
+        <div class="cc-name">SUP</div>
+        <div class="cc-val" style="color:#FFB74D;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div></div>
+      <div class="ww-strip">
+        <div class="ww-strip-label">Score</div>
+        <div class="wdot cur" title="Score: N/A">Score</div>
+      </div>
+    </div><div class="emp-card">
+      <div class="card-top">
+        <div class="card-left">
+          <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:3px;">
+            <div class="d-name">42-1</div>
+            
+            
+          </div>
+          <div class="d-fullname">42-1</div>
+          <div class="d-meta">MEF - Mary Ann Francisco</div>
+        </div>
+        <div class="card-right">
+          <div class="score-badge">
+            <div class="score-num c-blank">—</div>
+            <div class="score-unit">%</div>
+          </div>
+          <div class="rank-tag none">NO DATA</div>
+        </div>
+      </div>
+      <div class="score-bar-strip">
+        <div class="sbar-label">SCORE</div>
+        <div class="sbar-bg"><div class="sbar-fill c-blank" style="width:0%"></div></div>
+        <div class="sbar-val c-blank">N/A</div>
+      </div>
+      <div class="cat-cells"><div class="cat-cell cc-prod">
+        <div class="cc-name">PROD</div>
+        <div class="cc-val" style="color:#4FC3F7;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.30</div>
+      </div><div class="cat-cell cc-sla">
+        <div class="cc-name">SLA</div>
+        <div class="cc-val" style="color:#69F0AE;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-qual">
+        <div class="cc-name">QUAL</div>
+        <div class="cc-val" style="color:#CE93D8;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-att">
+        <div class="cc-name">ATT</div>
+        <div class="cc-val" style="color:#FFD54F;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div><div class="cat-cell cc-sup">
+        <div class="cc-name">SUP</div>
+        <div class="cc-val" style="color:#FFB74D;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div></div>
+      <div class="ww-strip">
+        <div class="ww-strip-label">Score</div>
+        <div class="wdot cur" title="Score: N/A">Score</div>
+      </div>
+    </div><div class="emp-card">
+      <div class="card-top">
+        <div class="card-left">
+          <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:3px;">
+            <div class="d-name">41-1</div>
+            
+            
+          </div>
+          <div class="d-fullname">41-1</div>
+          <div class="d-meta">MEF - Mary Ann Francisco</div>
+        </div>
+        <div class="card-right">
+          <div class="score-badge">
+            <div class="score-num c-blank">—</div>
+            <div class="score-unit">%</div>
+          </div>
+          <div class="rank-tag none">NO DATA</div>
+        </div>
+      </div>
+      <div class="score-bar-strip">
+        <div class="sbar-label">SCORE</div>
+        <div class="sbar-bg"><div class="sbar-fill c-blank" style="width:0%"></div></div>
+        <div class="sbar-val c-blank">N/A</div>
+      </div>
+      <div class="cat-cells"><div class="cat-cell cc-prod">
+        <div class="cc-name">PROD</div>
+        <div class="cc-val" style="color:#4FC3F7;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.30</div>
+      </div><div class="cat-cell cc-sla">
+        <div class="cc-name">SLA</div>
+        <div class="cc-val" style="color:#69F0AE;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-qual">
+        <div class="cc-name">QUAL</div>
+        <div class="cc-val" style="color:#CE93D8;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-att">
+        <div class="cc-name">ATT</div>
+        <div class="cc-val" style="color:#FFD54F;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div><div class="cat-cell cc-sup">
+        <div class="cc-name">SUP</div>
+        <div class="cc-val" style="color:#FFB74D;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div></div>
+      <div class="ww-strip">
+        <div class="ww-strip-label">Score</div>
+        <div class="wdot cur" title="Score: N/A">Score</div>
+      </div>
+    </div><div class="emp-card">
+      <div class="card-top">
+        <div class="card-left">
+          <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:3px;">
+            <div class="d-name">41-1</div>
+            
+            
+          </div>
+          <div class="d-fullname">41-1</div>
+          <div class="d-meta">MEF - Mary Ann Francisco</div>
+        </div>
+        <div class="card-right">
+          <div class="score-badge">
+            <div class="score-num c-blank">—</div>
+            <div class="score-unit">%</div>
+          </div>
+          <div class="rank-tag none">NO DATA</div>
+        </div>
+      </div>
+      <div class="score-bar-strip">
+        <div class="sbar-label">SCORE</div>
+        <div class="sbar-bg"><div class="sbar-fill c-blank" style="width:0%"></div></div>
+        <div class="sbar-val c-blank">N/A</div>
+      </div>
+      <div class="cat-cells"><div class="cat-cell cc-prod">
+        <div class="cc-name">PROD</div>
+        <div class="cc-val" style="color:#4FC3F7;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.30</div>
+      </div><div class="cat-cell cc-sla">
+        <div class="cc-name">SLA</div>
+        <div class="cc-val" style="color:#69F0AE;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-qual">
+        <div class="cc-name">QUAL</div>
+        <div class="cc-val" style="color:#CE93D8;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-att">
+        <div class="cc-name">ATT</div>
+        <div class="cc-val" style="color:#FFD54F;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div><div class="cat-cell cc-sup">
+        <div class="cc-name">SUP</div>
+        <div class="cc-val" style="color:#FFB74D;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div></div>
+      <div class="ww-strip">
+        <div class="ww-strip-label">Score</div>
+        <div class="wdot cur" title="Score: N/A">Score</div>
+      </div>
+    </div><div class="emp-card">
+      <div class="card-top">
+        <div class="card-left">
+          <div style="display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;margin-bottom:3px;">
+            <div class="d-name">41-1</div>
+            
+            
+          </div>
+          <div class="d-fullname">41-1</div>
+          <div class="d-meta">MEF - Mary Ann Francisco</div>
+        </div>
+        <div class="card-right">
+          <div class="score-badge">
+            <div class="score-num c-blank">—</div>
+            <div class="score-unit">%</div>
+          </div>
+          <div class="rank-tag none">NO DATA</div>
+        </div>
+      </div>
+      <div class="score-bar-strip">
+        <div class="sbar-label">SCORE</div>
+        <div class="sbar-bg"><div class="sbar-fill c-blank" style="width:0%"></div></div>
+        <div class="sbar-val c-blank">N/A</div>
+      </div>
+      <div class="cat-cells"><div class="cat-cell cc-prod">
+        <div class="cc-name">PROD</div>
+        <div class="cc-val" style="color:#4FC3F7;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.30</div>
+      </div><div class="cat-cell cc-sla">
+        <div class="cc-name">SLA</div>
+        <div class="cc-val" style="color:#69F0AE;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-qual">
+        <div class="cc-name">QUAL</div>
+        <div class="cc-val" style="color:#CE93D8;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.20</div>
+      </div><div class="cat-cell cc-att">
+        <div class="cc-name">ATT</div>
+        <div class="cc-val" style="color:#FFD54F;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div><div class="cat-cell cc-sup">
+        <div class="cc-name">SUP</div>
+        <div class="cc-val" style="color:#FFB74D;opacity:NaN;">undefined</div>
+        <div class="cc-wt">×0.15</div>
+      </div></div>
+      <div class="ww-strip">
+        <div class="ww-strip-label">Score</div>
+        <div class="wdot cur" title="Score: N/A">Score</div>
+      </div>
+    </div></div>
   </div>
   <div class="screen" id="s1">
     <div class="sec-hdr"><div class="sec-title">Score Trend &amp; Category Breakdown</div><div class="sec-sub">Weekly trend (left) · Category comparison per employee (right)</div><div class="sec-rule"></div></div>
@@ -494,33 +1180,229 @@ body.light-mode .ww-pill{color:var(--accent);}
       <div class="bkd-trend-panel">
         <div class="bkd-trend-hdr">
           <div style="display:flex;flex-direction:column;gap:3px;">
-            <div class="bkd-trend-title" id="trend-title">Score Trend</div>
-            <div style="font-size:.6rem;color:var(--dim);font-family:'DM Mono',monospace;" id="trend-period-label"></div>
+            <div class="bkd-trend-title" id="trend-title">All Teams — Score Trend</div>
+            <div style="font-size:.6rem;color:var(--dim);font-family:&#39;DM Mono&#39;,monospace;" id="trend-period-label">Score – Score · Weekly</div>
           </div>
           <div style="display:flex;align-items:center;gap:10px;">
-            <div class="bkd-trend-legend" id="trend-legend"></div>
+            <div class="bkd-trend-legend" id="trend-legend"><div class="bkd-trend-leg-item"><div class="bkd-trend-leg-dot" style="background:#F7941D"></div>41-2</div><div class="bkd-trend-leg-item"><div class="bkd-trend-leg-dot" style="background:#69F0AE"></div>41-2</div><div class="bkd-trend-leg-item"><div class="bkd-trend-leg-dot" style="background:#4DA6FF"></div>42-1</div><div class="bkd-trend-leg-item"><div class="bkd-trend-leg-dot" style="background:#FFD54F"></div>40</div><div class="bkd-trend-leg-item"><div class="bkd-trend-leg-dot" style="background:#CE93D8"></div>43-1</div><div class="bkd-trend-leg-item"><div class="bkd-trend-leg-dot" style="background:#EC4899"></div>41-1</div><div class="bkd-trend-leg-item"><div class="bkd-trend-leg-dot" style="background:#14B8A6"></div>42-1</div><div class="bkd-trend-leg-item"><div class="bkd-trend-leg-dot" style="background:#FF7043"></div>41-1</div><div class="bkd-trend-leg-item"><div class="bkd-trend-leg-dot" style="background:#84CC16"></div>43-1</div><div class="bkd-trend-leg-item"><div class="bkd-trend-leg-dot" style="background:#F43F5E"></div>41-1</div><div class="bkd-trend-leg-item"><div class="bkd-trend-leg-dot" style="background:#F7941D"></div>42-1</div><div class="bkd-trend-leg-item"><div class="bkd-trend-leg-dot" style="background:#69F0AE"></div>41-1</div><div class="bkd-trend-leg-item"><div class="bkd-trend-leg-dot" style="background:#4DA6FF"></div>41-1</div><div class="bkd-trend-leg-item"><div class="bkd-trend-leg-dot" style="background:#FFD54F"></div>41-1</div></div>
             <div style="display:flex;gap:3px;margin-left:8px;">
-              <button class="slicer-btn active" id="tp-wk" onclick="setTrendPeriod('week')">By Week</button>
-              <button class="slicer-btn" id="tp-mo" onclick="setTrendPeriod('month')">By Month</button>
-              <button class="slicer-btn" id="tp-qt" onclick="setTrendPeriod('quarter')">By Quarter</button>
+              <button class="slicer-btn active" id="tp-wk" onclick="setTrendPeriod(&#39;week&#39;)">By Week</button>
+              <button class="slicer-btn" id="tp-mo" onclick="setTrendPeriod(&#39;month&#39;)">By Month</button>
+              <button class="slicer-btn" id="tp-qt" onclick="setTrendPeriod(&#39;quarter&#39;)">By Quarter</button>
             </div>
           </div>
         </div>
-        <div class="bkd-trend-chart"><canvas id="trendChart"></canvas></div>
+        <div class="bkd-trend-chart"><canvas id="trendChart" style="box-sizing: border-box; display: block; height: 364px; width: 829px;" width="1244" height="547"></canvas></div>
       </div>
       <div class="bkd-chart-panel">
         <div class="bkd-chart-hdr">
           <div class="bkd-chart-title" id="bkd-chart-title">Employees — PROD</div>
           <div style="display:flex;gap:3px;align-items:center;">
-            <button class="slicer-btn active" id="cf-prod" onclick="setCatFilter('prod')">PROD</button>
-            <button class="slicer-btn" id="cf-sla"  onclick="setCatFilter('sla')">SLA</button>
-            <button class="slicer-btn" id="cf-qual" onclick="setCatFilter('qual')">QUAL</button>
-            <button class="slicer-btn" id="cf-att"  onclick="setCatFilter('att')">ATT</button>
-            <button class="slicer-btn" id="cf-sup"  onclick="setCatFilter('sup')">SUP</button>
+            <button class="slicer-btn active" id="cf-prod" onclick="setCatFilter(&#39;prod&#39;)">PROD</button>
+            <button class="slicer-btn" id="cf-sla" onclick="setCatFilter(&#39;sla&#39;)">SLA</button>
+            <button class="slicer-btn" id="cf-qual" onclick="setCatFilter(&#39;qual&#39;)">QUAL</button>
+            <button class="slicer-btn" id="cf-att" onclick="setCatFilter(&#39;att&#39;)">ATT</button>
+            <button class="slicer-btn" id="cf-sup" onclick="setCatFilter(&#39;sup&#39;)">SUP</button>
             <button class="btn-icon" onclick="openSettings()" title="Edit targets &amp; tags" style="margin-left:4px;font-size:11px;">✎</button>
           </div>
         </div>
-        <div class="bkd-chart-body" id="bkd-chart-body"></div>
+        <div class="bkd-chart-body" id="bkd-chart-body"><div class="bkd-chart-row">
+      <div class="bkd-chart-name" style="display:flex;flex-direction:column;gap:2px;">
+        <span>41-2 41-2</span>
+        
+      </div>
+      <div class="bkd-chart-bars" style="flex-direction:column;gap:0;">
+        <div class="bkd-chart-bar-row">
+          <div class="bkd-chart-bar-bg" style="height:10px;position:relative;">
+            <div class="bkd-chart-bar-fill" style="width:NaN%;background:#4FC3F7;opacity:NaN"></div>
+            <div class="target-marker" style="left:90%" title="Target: 27%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bkd-chart-score" style="color:#4FC3F7;opacity:NaN">undefined%</div>
+    </div><div class="bkd-chart-row">
+      <div class="bkd-chart-name" style="display:flex;flex-direction:column;gap:2px;">
+        <span>41-2 41-2</span>
+        
+      </div>
+      <div class="bkd-chart-bars" style="flex-direction:column;gap:0;">
+        <div class="bkd-chart-bar-row">
+          <div class="bkd-chart-bar-bg" style="height:10px;position:relative;">
+            <div class="bkd-chart-bar-fill" style="width:NaN%;background:#4FC3F7;opacity:NaN"></div>
+            <div class="target-marker" style="left:90%" title="Target: 27%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bkd-chart-score" style="color:#4FC3F7;opacity:NaN">undefined%</div>
+    </div><div class="bkd-chart-row">
+      <div class="bkd-chart-name" style="display:flex;flex-direction:column;gap:2px;">
+        <span>42-1 42-1</span>
+        
+      </div>
+      <div class="bkd-chart-bars" style="flex-direction:column;gap:0;">
+        <div class="bkd-chart-bar-row">
+          <div class="bkd-chart-bar-bg" style="height:10px;position:relative;">
+            <div class="bkd-chart-bar-fill" style="width:NaN%;background:#4FC3F7;opacity:NaN"></div>
+            <div class="target-marker" style="left:90%" title="Target: 27%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bkd-chart-score" style="color:#4FC3F7;opacity:NaN">undefined%</div>
+    </div><div class="bkd-chart-row">
+      <div class="bkd-chart-name" style="display:flex;flex-direction:column;gap:2px;">
+        <span>40 40</span>
+        
+      </div>
+      <div class="bkd-chart-bars" style="flex-direction:column;gap:0;">
+        <div class="bkd-chart-bar-row">
+          <div class="bkd-chart-bar-bg" style="height:10px;position:relative;">
+            <div class="bkd-chart-bar-fill" style="width:NaN%;background:#4FC3F7;opacity:NaN"></div>
+            <div class="target-marker" style="left:90%" title="Target: 27%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bkd-chart-score" style="color:#4FC3F7;opacity:NaN">undefined%</div>
+    </div><div class="bkd-chart-row">
+      <div class="bkd-chart-name" style="display:flex;flex-direction:column;gap:2px;">
+        <span>43-1 43-1</span>
+        
+      </div>
+      <div class="bkd-chart-bars" style="flex-direction:column;gap:0;">
+        <div class="bkd-chart-bar-row">
+          <div class="bkd-chart-bar-bg" style="height:10px;position:relative;">
+            <div class="bkd-chart-bar-fill" style="width:NaN%;background:#4FC3F7;opacity:NaN"></div>
+            <div class="target-marker" style="left:90%" title="Target: 27%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bkd-chart-score" style="color:#4FC3F7;opacity:NaN">undefined%</div>
+    </div><div class="bkd-chart-row">
+      <div class="bkd-chart-name" style="display:flex;flex-direction:column;gap:2px;">
+        <span>41-1 41-1</span>
+        
+      </div>
+      <div class="bkd-chart-bars" style="flex-direction:column;gap:0;">
+        <div class="bkd-chart-bar-row">
+          <div class="bkd-chart-bar-bg" style="height:10px;position:relative;">
+            <div class="bkd-chart-bar-fill" style="width:NaN%;background:#4FC3F7;opacity:NaN"></div>
+            <div class="target-marker" style="left:90%" title="Target: 27%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bkd-chart-score" style="color:#4FC3F7;opacity:NaN">undefined%</div>
+    </div><div class="bkd-chart-row">
+      <div class="bkd-chart-name" style="display:flex;flex-direction:column;gap:2px;">
+        <span>42-1 42-1</span>
+        
+      </div>
+      <div class="bkd-chart-bars" style="flex-direction:column;gap:0;">
+        <div class="bkd-chart-bar-row">
+          <div class="bkd-chart-bar-bg" style="height:10px;position:relative;">
+            <div class="bkd-chart-bar-fill" style="width:NaN%;background:#4FC3F7;opacity:NaN"></div>
+            <div class="target-marker" style="left:90%" title="Target: 27%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bkd-chart-score" style="color:#4FC3F7;opacity:NaN">undefined%</div>
+    </div><div class="bkd-chart-row">
+      <div class="bkd-chart-name" style="display:flex;flex-direction:column;gap:2px;">
+        <span>41-1 41-1</span>
+        
+      </div>
+      <div class="bkd-chart-bars" style="flex-direction:column;gap:0;">
+        <div class="bkd-chart-bar-row">
+          <div class="bkd-chart-bar-bg" style="height:10px;position:relative;">
+            <div class="bkd-chart-bar-fill" style="width:NaN%;background:#4FC3F7;opacity:NaN"></div>
+            <div class="target-marker" style="left:90%" title="Target: 27%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bkd-chart-score" style="color:#4FC3F7;opacity:NaN">undefined%</div>
+    </div><div class="bkd-chart-row">
+      <div class="bkd-chart-name" style="display:flex;flex-direction:column;gap:2px;">
+        <span>43-1 43-1</span>
+        
+      </div>
+      <div class="bkd-chart-bars" style="flex-direction:column;gap:0;">
+        <div class="bkd-chart-bar-row">
+          <div class="bkd-chart-bar-bg" style="height:10px;position:relative;">
+            <div class="bkd-chart-bar-fill" style="width:NaN%;background:#4FC3F7;opacity:NaN"></div>
+            <div class="target-marker" style="left:90%" title="Target: 27%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bkd-chart-score" style="color:#4FC3F7;opacity:NaN">undefined%</div>
+    </div><div class="bkd-chart-row">
+      <div class="bkd-chart-name" style="display:flex;flex-direction:column;gap:2px;">
+        <span>41-1 41-1</span>
+        
+      </div>
+      <div class="bkd-chart-bars" style="flex-direction:column;gap:0;">
+        <div class="bkd-chart-bar-row">
+          <div class="bkd-chart-bar-bg" style="height:10px;position:relative;">
+            <div class="bkd-chart-bar-fill" style="width:NaN%;background:#4FC3F7;opacity:NaN"></div>
+            <div class="target-marker" style="left:90%" title="Target: 27%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bkd-chart-score" style="color:#4FC3F7;opacity:NaN">undefined%</div>
+    </div><div class="bkd-chart-row">
+      <div class="bkd-chart-name" style="display:flex;flex-direction:column;gap:2px;">
+        <span>42-1 42-1</span>
+        
+      </div>
+      <div class="bkd-chart-bars" style="flex-direction:column;gap:0;">
+        <div class="bkd-chart-bar-row">
+          <div class="bkd-chart-bar-bg" style="height:10px;position:relative;">
+            <div class="bkd-chart-bar-fill" style="width:NaN%;background:#4FC3F7;opacity:NaN"></div>
+            <div class="target-marker" style="left:90%" title="Target: 27%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bkd-chart-score" style="color:#4FC3F7;opacity:NaN">undefined%</div>
+    </div><div class="bkd-chart-row">
+      <div class="bkd-chart-name" style="display:flex;flex-direction:column;gap:2px;">
+        <span>41-1 41-1</span>
+        
+      </div>
+      <div class="bkd-chart-bars" style="flex-direction:column;gap:0;">
+        <div class="bkd-chart-bar-row">
+          <div class="bkd-chart-bar-bg" style="height:10px;position:relative;">
+            <div class="bkd-chart-bar-fill" style="width:NaN%;background:#4FC3F7;opacity:NaN"></div>
+            <div class="target-marker" style="left:90%" title="Target: 27%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bkd-chart-score" style="color:#4FC3F7;opacity:NaN">undefined%</div>
+    </div><div class="bkd-chart-row">
+      <div class="bkd-chart-name" style="display:flex;flex-direction:column;gap:2px;">
+        <span>41-1 41-1</span>
+        
+      </div>
+      <div class="bkd-chart-bars" style="flex-direction:column;gap:0;">
+        <div class="bkd-chart-bar-row">
+          <div class="bkd-chart-bar-bg" style="height:10px;position:relative;">
+            <div class="bkd-chart-bar-fill" style="width:NaN%;background:#4FC3F7;opacity:NaN"></div>
+            <div class="target-marker" style="left:90%" title="Target: 27%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bkd-chart-score" style="color:#4FC3F7;opacity:NaN">undefined%</div>
+    </div><div class="bkd-chart-row">
+      <div class="bkd-chart-name" style="display:flex;flex-direction:column;gap:2px;">
+        <span>41-1 41-1</span>
+        
+      </div>
+      <div class="bkd-chart-bars" style="flex-direction:column;gap:0;">
+        <div class="bkd-chart-bar-row">
+          <div class="bkd-chart-bar-bg" style="height:10px;position:relative;">
+            <div class="bkd-chart-bar-fill" style="width:NaN%;background:#4FC3F7;opacity:NaN"></div>
+            <div class="target-marker" style="left:90%" title="Target: 27%"></div>
+          </div>
+        </div>
+      </div>
+      <div class="bkd-chart-score" style="color:#4FC3F7;opacity:NaN">undefined%</div>
+    </div></div>
       </div>
     </div>
   </div>
@@ -528,7 +1410,7 @@ body.light-mode .ww-pill{color:var(--accent);}
 <div id="ap-bar"><div id="ap-prog"></div></div>
 
 <!-- SETTINGS OVERLAY -->
-<div id="settings-overlay" onclick="closeSettingsOutside(event)">
+<div id="settings-overlay" onclick="closeSettingsOutside(event)" class="">
   <div class="settings-panel">
     <div class="settings-panel-hdr">
       <div class="settings-title">NH OPS <span>SETTINGS</span></div>
@@ -553,17 +1435,17 @@ body.light-mode .ww-pill{color:var(--accent);}
       <div class="settings-section-title">Upload Scorecard Excel</div>
       <div style="font-size:.65rem;color:var(--dim);margin-bottom:.6rem;">Upload NH_OPS_Scorecard_Criteria_.xlsx — data will be parsed and pushed to GitHub automatically.</div>
       <label style="display:flex;align-items:center;gap:.6rem;cursor:pointer;">
-        <div style="background:var(--accent-bg);border:1px solid var(--accent);color:var(--accent);font-family:'DM Sans',sans-serif;font-size:.72rem;font-weight:600;padding:.35rem .8rem;border-radius:4px;white-space:nowrap;">
+        <div style="background:var(--accent-bg);border:1px solid var(--accent);color:var(--accent);font-family:&#39;DM Sans&#39;,sans-serif;font-size:.72rem;font-weight:600;padding:.35rem .8rem;border-radius:4px;white-space:nowrap;">
           📂 Choose Excel file
         </div>
-        <div style="font-size:.68rem;color:var(--muted);" id="excel-filename">No file chosen</div>
+        <div style="font-size:.68rem;color:var(--muted);" id="excel-filename">NH OPS Scorecard Criteria .xlsx</div>
         <input type="file" id="excel-upload" accept=".xlsx" style="display:none;" onchange="onExcelSelected(event)">
       </label>
-      <div id="parse-status" style="margin-top:.5rem;font-size:.65rem;color:var(--dim);min-height:16px;"></div>
-      <button class="settings-save" id="push-btn" onclick="pushToGitHub()" style="margin-top:.6rem;opacity:.5;pointer-events:none;">
+      <div id="parse-status" style="margin-top: 0.5rem; font-size: 0.65rem; color: var(--green); min-height: 16px;">✓ Parsed 14 employees · Current WW: Score</div>
+      <button class="settings-save" id="push-btn" onclick="pushToGitHub()" style="margin-top: 0.6rem; opacity: 1; pointer-events: auto;">
         ⬆ Parse &amp; Push to GitHub
       </button>
-      <div id="push-status" style="margin-top:.5rem;font-size:.65rem;min-height:16px;text-align:center;"></div>
+      <div id="push-status" style="margin-top: 0.5rem; font-size: 0.65rem; min-height: 16px; text-align: center; color: var(--green);">✓ Pushed! Dashboard will load live data on next refresh.</div>
     </div>
 
     <!-- CATEGORY TARGETS -->
@@ -720,96 +1602,81 @@ function onExcelSelected(evt){
 }
 
 function parseWorkbook(wb){
-  /* ── Individual Scorecard sheet ── */
+  /* Sheet range B2:AE18 → SheetJS raw[]:
+     raw[0] = WW labels (WW14 at col 4, every 2 cols; rankCol=c, scoreCol=c+1)
+     raw[1] = headers row (Team=0, Manager=1, Employee=2, JG=3)
+     raw[2]+ = employee rows */
   const ws=wb.Sheets['Individual Scorecard'];
   if(!ws)throw new Error('Sheet "Individual Scorecard" not found');
   const raw=XLSX.utils.sheet_to_json(ws,{header:1,defval:null});
 
-  // Row 1 = WW labels at cols 5,7,9… Row 2 = Rank/Score headers
   const wwMap={};
-  for(let c=5;c<31;c+=2){
-    const v=raw[1]&&raw[1][c];
-    if(v!=null){
-      const ww=String(v).trim().replace(' ','');
-      wwMap[ww]={rankCol:c,scoreCol:c+1};
-    }
+  for(let c=4;c<30;c+=2){
+    const v=raw[0]&&raw[0][c];
+    if(v!=null){const ww=String(v).trim().replace(/\s+/g,'');wwMap[ww]={rankCol:c,scoreCol:c+1};}
   }
   const weeks=Object.keys(wwMap);
 
   const employees=[];
-  for(let i=3;i<raw.length;i++){
+  for(let i=2;i<raw.length;i++){
     const row=raw[i];
-    if(!row||row[1]==null)continue;
-    const empRaw=String(row[3]||'');
-    const parts=empRaw.split(' - ');
-    const code=parts[0].trim();
-    const name=parts[1]?parts[1].trim():empRaw;
-    const mgrRaw=String(row[2]||'');
+    if(!row||row[0]==null||row[0]==='')continue;
+    if(String(row[0]).trim()==='Team')continue;
+    const empRaw=String(row[2]||'');
+    if(!empRaw.includes(' - '))continue;
+    const [codeRaw,...nameParts]=empRaw.split(' - ');
+    const code=codeRaw.trim(), name=nameParts.join(' - ').trim();
+    const mgrRaw=String(row[1]||'');
     const mgrParts=mgrRaw.split(' - ');
     const scores={},ranks={};
     weeks.forEach(ww=>{
-      const s=row[wwMap[ww].scoreCol];
-      const r=row[wwMap[ww].rankCol];
-      scores[ww]=s==null?null:Math.round(parseFloat(s));
-      ranks[ww]=r==null?null:String(r);
+      const s=row[wwMap[ww].scoreCol], r=row[wwMap[ww].rankCol];
+      scores[ww]=(s==null||s==='')?null:Math.round(parseFloat(s));
+      ranks[ww]=(r==null||r==='')?null:String(r);
     });
-    employees.push({
-      code,name,jg:String(row[4]||''),
-      team:String(row[1]).trim(),
-      manager:mgrParts[0].trim(),
-      managerName:mgrParts[1]?mgrParts[1].trim():'',
-      scores,ranks,cats:{}
-    });
+    employees.push({code,name,jg:String(row[3]||''),team:String(row[0]).trim(),
+      manager:mgrParts[0].trim(),managerName:mgrParts[1]?mgrParts[1].trim():'',
+      scores,ranks,cats:{}});
   }
 
-  /* ── Team sheets for category breakdown ── */
   ['IX OHO','PC SAC'].forEach(sheetName=>{
-    const s=wb.Sheets[sheetName];
-    if(!s)return;
+    const s=wb.Sheets[sheetName]; if(!s)return;
     const rows=XLSX.utils.sheet_to_json(s,{header:1,defval:null});
-    // find emp code rows (3-letter uppercase, col 0, col 1 null)
     const empRows=[];
     rows.forEach((r,i)=>{
+      if(!r)return;
       const v=r[0]!=null?String(r[0]).trim():'';
-      if(v.length===3&&v===v.toUpperCase()&&r[1]==null)empRows.push({i,code:v});
+      if(v.length===3&&v===v.toUpperCase()&&(r[1]==null||r[1]===''))empRows.push({i,code:v});
     });
     empRows.forEach(({i:startRow,code},idx)=>{
       const endRow=idx+1<empRows.length?empRows[idx+1].i:rows.length;
-      const cats={prod:0,sla:0,qual:0,att:0,sup:0};
-      let curCat=null;
+      const cats={prod:0,sla:0,qual:0,att:0,sup:0}; let curCat=null;
       for(let r=startRow+2;r<endRow;r++){
-        const row=rows[r];
-        if(!row)continue;
+        const row=rows[r]; if(!row)continue;
         const catCell=row[0]!=null?String(row[0]).trim():'';
-        const wCell=row[2];
-        const sCell=row[5];
-        if(wCell==null)continue;
-        const w=parseFloat(wCell);
-        if(isNaN(w)||w>=0.5)continue;
+        const wCell=row[2], sCell=row[5];
+        if(wCell==null||wCell==='')continue;
+        const w=parseFloat(wCell); if(isNaN(w)||w>=0.5)continue;
         if(CATEGORIES.includes(catCell))curCat=CAT_KEYS[catCell];
-        if(curCat&&sCell!=null){
-          try{cats[curCat]+=parseFloat(sCell);}catch(e){}
-        }
+        if(curCat&&sCell!=null&&sCell!==''){const sv=parseFloat(sCell);if(!isNaN(sv))cats[curCat]+=sv;}
       }
       const emp=employees.find(e=>e.code===code);
-      if(emp){
-        emp.cats={
-          prod:cats.prod>0?Math.round(cats.prod*100):null,
-          sla: cats.sla>0? Math.round(cats.sla*100):null,
-          qual:cats.qual>0?Math.round(cats.qual*100):null,
-          att: cats.att>0? Math.round(cats.att*100):null,
-          sup: cats.sup>0? Math.round(cats.sup*100):null,
-        };
-      }
+      if(emp)emp.cats={
+        prod:cats.prod>0?Math.round(cats.prod*100):null,
+        sla: cats.sla>0? Math.round(cats.sla*100):null,
+        qual:cats.qual>0?Math.round(cats.qual*100):null,
+        att: cats.att>0? Math.round(cats.att*100):null,
+        sup: cats.sup>0? Math.round(cats.sup*100):null,
+      };
     });
   });
 
-  // detect current WW
   const hasData={};
   weeks.forEach(ww=>hasData[ww]=employees.some(e=>e.scores[ww]!==null));
   const cww=[...weeks].reverse().find(ww=>hasData[ww])||weeks[weeks.length-1];
   return{weeks,currentWW:cww,employees};
 }
+
 
 /* ══ GITHUB PUSH ══ */
 async function pushToGitHub(){
@@ -1234,5 +2101,6 @@ showScreen(0);
 // Try loading live data from GitHub (silently, won't break if offline)
 loadFromGitHub();
 </script>
-</body>
-</html>
+
+
+</body></html>
