@@ -4,9 +4,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NH Ops Dashboard — Release 1</title>
-<link href="./NH Ops Dashboard — Release 1_files/css2" rel="stylesheet">
-<script src="./NH Ops Dashboard — Release 1_files/chart.umd.min.js.download"></script>
-<script src="./NH Ops Dashboard — Release 1_files/xlsx.full.min.js.download"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <style>
 /* ── ROOT: matches Design Andon Board exactly ── */
 :root {
@@ -1602,51 +1602,67 @@ function onExcelSelected(evt){
 }
 
 function parseWorkbook(wb){
-  /* Sheet range B2:AE18 → SheetJS raw[]:
-     raw[0] = WW labels (WW14 at col 4, every 2 cols; rankCol=c, scoreCol=c+1)
-     raw[1] = headers row (Team=0, Manager=1, Employee=2, JG=3)
-     raw[2]+ = employee rows */
+  /* Definitive index map (sheet B1:AE18, col B = index 0):
+     raw[0] = row 1  — empty
+     raw[1] = row 2  — WW labels: WW14 rank at index 4, score at 5; every +2
+     raw[2] = row 3  — headers (Team, Manager, Employee, JG at indices 0-3)
+     raw[3]+ = row 4+ — employee data (same column layout as headers) */
   const ws=wb.Sheets['Individual Scorecard'];
   if(!ws)throw new Error('Sheet "Individual Scorecard" not found');
   const raw=XLSX.utils.sheet_to_json(ws,{header:1,defval:null});
 
+  /* WW map from row index 1 (WW labels row) */
   const wwMap={};
   for(let c=4;c<30;c+=2){
-    const v=raw[0]&&raw[0][c];
-    if(v!=null){const ww=String(v).trim().replace(/\s+/g,'');wwMap[ww]={rankCol:c,scoreCol:c+1};}
+    const v=raw[1]&&raw[1][c];
+    if(v!=null){
+      const ww=String(v).trim().replace(/\s+/g,'');
+      wwMap[ww]={rankCol:c,scoreCol:c+1};
+    }
   }
   const weeks=Object.keys(wwMap);
 
+  /* Employees from row index 3 onwards */
   const employees=[];
-  for(let i=2;i<raw.length;i++){
+  for(let i=3;i<raw.length;i++){
     const row=raw[i];
     if(!row||row[0]==null||row[0]==='')continue;
-    if(String(row[0]).trim()==='Team')continue;
+    /* Employee cell (index 2) = "JOA - James Avila" */
     const empRaw=String(row[2]||'');
     if(!empRaw.includes(' - '))continue;
-    const [codeRaw,...nameParts]=empRaw.split(' - ');
-    const code=codeRaw.trim(), name=nameParts.join(' - ').trim();
+    const dashIdx=empRaw.indexOf(' - ');
+    const code=empRaw.slice(0,dashIdx).trim();
+    const name=empRaw.slice(dashIdx+3).trim();
     const mgrRaw=String(row[1]||'');
-    const mgrParts=mgrRaw.split(' - ');
+    const mgrDash=mgrRaw.indexOf(' - ');
+    const manager=mgrDash>=0?mgrRaw.slice(0,mgrDash).trim():mgrRaw.trim();
+    const managerName=mgrDash>=0?mgrRaw.slice(mgrDash+3).trim():'';
     const scores={},ranks={};
     weeks.forEach(ww=>{
       const s=row[wwMap[ww].scoreCol], r=row[wwMap[ww].rankCol];
-      scores[ww]=(s==null||s==='')?null:Math.round(parseFloat(s));
+      scores[ww]=(s==null||s===''||isNaN(parseFloat(s)))?null:Math.round(parseFloat(s));
       ranks[ww]=(r==null||r==='')?null:String(r);
     });
-    employees.push({code,name,jg:String(row[3]||''),team:String(row[0]).trim(),
-      manager:mgrParts[0].trim(),managerName:mgrParts[1]?mgrParts[1].trim():'',
-      scores,ranks,cats:{}});
+    employees.push({
+      code,name,
+      jg:String(row[3]||''),
+      team:String(row[0]).trim(),
+      manager,managerName,
+      scores,ranks,cats:{}
+    });
   }
 
+  /* Category breakdown from IX OHO / PC SAC sheets */
   ['IX OHO','PC SAC'].forEach(sheetName=>{
     const s=wb.Sheets[sheetName]; if(!s)return;
     const rows=XLSX.utils.sheet_to_json(s,{header:1,defval:null});
+    /* Find employee header rows: col0 = 3-letter code, col1 = null/empty */
     const empRows=[];
     rows.forEach((r,i)=>{
       if(!r)return;
       const v=r[0]!=null?String(r[0]).trim():'';
-      if(v.length===3&&v===v.toUpperCase()&&(r[1]==null||r[1]===''))empRows.push({i,code:v});
+      if(v.length===3&&v===v.toUpperCase()&&(r[1]==null||r[1]===''))
+        empRows.push({i,code:v});
     });
     empRows.forEach(({i:startRow,code},idx)=>{
       const endRow=idx+1<empRows.length?empRows[idx+1].i:rows.length;
@@ -1656,9 +1672,13 @@ function parseWorkbook(wb){
         const catCell=row[0]!=null?String(row[0]).trim():'';
         const wCell=row[2], sCell=row[5];
         if(wCell==null||wCell==='')continue;
-        const w=parseFloat(wCell); if(isNaN(w)||w>=0.5)continue;
+        const w=parseFloat(wCell);
+        if(isNaN(w)||w>=0.5)continue;
         if(CATEGORIES.includes(catCell))curCat=CAT_KEYS[catCell];
-        if(curCat&&sCell!=null&&sCell!==''){const sv=parseFloat(sCell);if(!isNaN(sv))cats[curCat]+=sv;}
+        if(curCat&&sCell!=null&&sCell!==''){
+          const sv=parseFloat(sCell);
+          if(!isNaN(sv))cats[curCat]+=sv;
+        }
       }
       const emp=employees.find(e=>e.code===code);
       if(emp)emp.cats={
