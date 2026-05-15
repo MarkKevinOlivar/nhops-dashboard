@@ -1615,19 +1615,24 @@ function parseWorkbook(wb){
   const raw=XLSX.utils.sheet_to_json(ws,{header:1,defval:null});
 
   /* WW map from row index 1 (WW labels row) */
+  /* SheetJS skips leading empty rows, so:
+     raw[0] = WW labels row  (WW14 at col 4, score at col 5, every +2)
+     raw[1] = headers row    (Team, Manager, Employee, JG at cols 0-3)
+     raw[2]+ = employee rows */
   const wwMap={};
   for(let c=4;c<30;c+=2){
-    const v=raw[1]&&raw[1][c];
+    const v=raw[0]&&raw[0][c];
     if(v!=null){
       const ww=String(v).trim().replace(/\s+/g,'');
-      wwMap[ww]={rankCol:c,scoreCol:c+1};
+      /* Only add if it looks like a WW label, not a header */
+      if(ww.startsWith('WW'))wwMap[ww]={rankCol:c,scoreCol:c+1};
     }
   }
   const weeks=Object.keys(wwMap);
 
-  /* Employees from row index 3 onwards */
+  /* Employees from row index 2 onwards (skip row 0=WW labels, row 1=headers) */
   const employees=[];
-  for(let i=3;i<raw.length;i++){
+  for(let i=2;i<raw.length;i++){
     const row=raw[i];
     if(!row||row[0]==null||row[0]==='')continue;
     /* Employee cell (index 2) = "JOA - James Avila" */
